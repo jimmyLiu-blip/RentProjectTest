@@ -27,8 +27,6 @@ namespace RentProject.Repository
                 return result == 1
                     ? "OK：連線成功，且可執行 SQL (SELECT 1 回傳1)"
                     : $"連線成功，但 SELECT 1 回傳非預期值：{result}";
-
-
             }
             catch (Exception ex)
             {

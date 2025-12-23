@@ -10,33 +10,28 @@ namespace RentProject
     {
         private readonly RentTimeService _service;
 
+        // =========================
+        // 1) 欄位 / 建構子
+        // =========================
         public Project(RentTimeService service)
         {
             InitializeComponent();
             _service = service;
         }
 
+        // =========================
+        // 2) Form Load：初始化 UI
+        // =========================
         private void Project_Load(object sender, EventArgs e)
         {
             ApplyLunchUI();
             ApplyDinnerUI();
-
-            // 綁事件：只要任何一個變動，就重算
-            startDateEdit.EditValueChanged += (_, __) => UpdateEstimatedUI();
-            endDateEdit.EditValueChanged += (_, __) => UpdateEstimatedUI();
-            startTimeEdit.EditValueChanged += (_, __) => UpdateEstimatedUI();
-            endTimeEdit.EditValueChanged += (_, __) => UpdateEstimatedUI();
-
-            chkHasLunch.CheckedChanged += (_, __) => { ApplyLunchUI(); UpdateEstimatedUI(); };
-            chkHasDinner.CheckedChanged += (_, __) => { ApplyDinnerUI(); UpdateEstimatedUI(); };
-
-            txtDinnerMinutes.EditValueChanged += (_, __) => UpdateEstimatedUI();
-
-            // 表單一打開也先算一次
             UpdateEstimatedUI();
         }
 
-
+        // =========================
+        // 3) 主要流程：按鈕事件
+        // =========================
         private void btnCreatedRentTime_Click(object sender, EventArgs e)
         {
             try
@@ -44,11 +39,11 @@ namespace RentProject
                 var model = BuildModelFormUI();
 
                 var result = _service.CreateRentTime(model);
-                
+
                 txtBookingNo.Text = result.BookingNo;
 
                 XtraMessageBox.Show(
-                    $"建立成功! \nRentTimeId：{result.RentTimeId}\nBookingNo：{result.BookingNo}","CreateRentTime");
+                    $"建立成功! \nRentTimeId：{result.RentTimeId}\nBookingNo：{result.BookingNo}", "CreateRentTime");
             }
             catch (Exception ex)
             {
@@ -56,19 +51,58 @@ namespace RentProject
             }
         }
 
+        // =========================
+        // 4) 控制項事件：只負責觸發更新
+        // =========================
+
         private void chkHasLunch_CheckedChanged(object sender, EventArgs e)
         {
             ApplyLunchUI();
+            UpdateEstimatedUI();
         }
 
         private void chkHasDinner_CheckedChanged(object sender, EventArgs e)
         {
             ApplyDinnerUI();
+            UpdateEstimatedUI();
         }
 
+        private void startDateEdit_EditValueChanged_1(object sender, EventArgs e)
+        {
+            UpdateEstimatedUI();
+        }
+
+        private void endDateEdit_EditValueChanged_1(object sender, EventArgs e)
+        {
+            UpdateEstimatedUI();
+        }
+
+        private void startTimeEdit_EditValueChanged_1(object sender, EventArgs e)
+        {
+            UpdateEstimatedUI();
+        }
+
+        private void endTimeEdit_EditValueChanged_1(object sender, EventArgs e)
+        {
+            UpdateEstimatedUI();
+        }
+
+        private void txtDinnerMinutes_EditValueChanged_1(object sender, EventArgs e)
+        {
+            if (!int.TryParse(txtDinnerMinutes.Text, out _))
+            {
+                txtDinnerMinutes.Text = "0";
+            }
+
+            UpdateEstimatedUI();
+        }
+
+        // =========================
+        // 5) UI 套用：午餐 / 晚餐規則
+        // =========================
         private void ApplyLunchUI()
-        { 
-            txtLunchMinutes.Properties.ReadOnly = true ;
+        {
+            txtLunchMinutes.Properties.ReadOnly = true;
             txtLunchMinutes.Text = chkHasLunch.Checked ? "60" : "0";
         }
 
@@ -89,6 +123,9 @@ namespace RentProject
             }
         }
 
+        // =========================
+        // 6) 從 UI 組出 Model
+        // =========================
         private RentTime BuildModelFormUI()
         {
             return new RentTime
@@ -126,13 +163,9 @@ namespace RentProject
             };
         }
 
-        // 小工具
-
-        private static int ParseIntOrZero(string? s)
-        {
-            return int.TryParse(s?.Trim(), out var v) ? v : 0;
-        }
-
+        // =========================
+        // 7) 預估時間：只負責顯示在 UI
+        // =========================
         private void UpdateEstimatedUI()
         {
             var startDate = startDateEdit.EditValue as DateTime?;
@@ -142,7 +175,7 @@ namespace RentProject
 
             if (startDate is null || endDate is null || startTime is null || endTime is null)
             {
-                txtEstimatedHours.Text = "";
+                txtEstimatedHours.Text = "請輸入開始/結束日期時間";
                 return;
             }
 
@@ -151,7 +184,7 @@ namespace RentProject
 
             if (end < start)
             {
-                txtEstimatedHours.Text = "結束 < 開始";
+                txtEstimatedHours.Text = "結束時間不能早於開始時間";
                 return;
             }
 
@@ -165,6 +198,14 @@ namespace RentProject
             var hours = Math.Round(minutes / 60m, 2);
 
             txtEstimatedHours.Text = $"{minutes} 分鐘 ({hours} 小時)";
+        }
+
+        // =========================
+        // 8) 小工具
+        // =========================
+        private static int ParseIntOrZero(string? s)
+        {
+            return int.TryParse(s?.Trim(), out var v) ? v : 0;
         }
     }
 }
