@@ -283,16 +283,21 @@
             cmbProjectNo.Location = new System.Drawing.Point(162, 404);
             cmbProjectNo.Name = "cmbProjectNo";
             cmbProjectNo.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cmbProjectNo.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             cmbProjectNo.Size = new System.Drawing.Size(225, 28);
             cmbProjectNo.TabIndex = 24;
+            cmbProjectNo.EditValueChanged += cmbProjectNo_EditValueChanged;
             // 
             // cmbLocation
             // 
             cmbLocation.Location = new System.Drawing.Point(162, 684);
             cmbLocation.Name = "cmbLocation";
             cmbLocation.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cmbLocation.Properties.Items.AddRange(new object[] { "Conducted 1", "Conducted 2", "Conducted 3", "Conducted 4", "Conducted 5", "Conducted 6", "Setup Room 1", "SAC 1", "SAC 2", "SAC 3", "FAC 1", "Conducted A", "Conducted B", " Conducted C", "Conducted D", "Conducted E", "Conducted F", "Setup Room A", "SAC C", "SAC D", "SAC G", "FAC A" });
+            cmbLocation.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             cmbLocation.Size = new System.Drawing.Size(225, 28);
             cmbLocation.TabIndex = 25;
+            cmbLocation.EditValueChanged += cmbLocation_EditValueChanged;
             // 
             // startDateEdit
             // 
@@ -303,6 +308,7 @@
             startDateEdit.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             startDateEdit.Size = new System.Drawing.Size(151, 28);
             startDateEdit.TabIndex = 26;
+            startDateEdit.EditValueChanged += startDateEdit_EditValueChanged;
             // 
             // endDateEdit
             // 
@@ -313,6 +319,7 @@
             endDateEdit.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             endDateEdit.Size = new System.Drawing.Size(151, 28);
             endDateEdit.TabIndex = 27;
+            endDateEdit.EditValueChanged += endDateEdit_EditValueChanged;
             // 
             // startTimeEdit
             // 
@@ -320,8 +327,10 @@
             startTimeEdit.Location = new System.Drawing.Point(138, 570);
             startTimeEdit.Name = "startTimeEdit";
             startTimeEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            startTimeEdit.Properties.MaskSettings.Set("mask", "HH: mm");
             startTimeEdit.Size = new System.Drawing.Size(151, 28);
             startTimeEdit.TabIndex = 28;
+            startTimeEdit.EditValueChanged += startTimeEdit_EditValueChanged;
             // 
             // endTimeEdit
             // 
@@ -329,8 +338,10 @@
             endTimeEdit.Location = new System.Drawing.Point(415, 570);
             endTimeEdit.Name = "endTimeEdit";
             endTimeEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            endTimeEdit.Properties.MaskSettings.Set("mask", "HH: mm");
             endTimeEdit.Size = new System.Drawing.Size(151, 28);
             endTimeEdit.TabIndex = 29;
+            endTimeEdit.EditValueChanged += endTimeEdit_EditValueChanged;
             // 
             // txtBookingNo
             // 
@@ -344,6 +355,7 @@
             // 
             txtArea.Location = new System.Drawing.Point(162, 98);
             txtArea.Name = "txtArea";
+            txtArea.Properties.ReadOnly = true;
             txtArea.Size = new System.Drawing.Size(225, 28);
             txtArea.TabIndex = 31;
             // 
@@ -379,6 +391,7 @@
             // 
             txtPE.Location = new System.Drawing.Point(162, 450);
             txtPE.Name = "txtPE";
+            txtPE.Properties.ReadOnly = true;
             txtPE.Size = new System.Drawing.Size(225, 28);
             txtPE.TabIndex = 37;
             // 
@@ -386,6 +399,7 @@
             // 
             txtProjectName.Location = new System.Drawing.Point(562, 407);
             txtProjectName.Name = "txtProjectName";
+            txtProjectName.Properties.ReadOnly = true;
             txtProjectName.Size = new System.Drawing.Size(225, 28);
             txtProjectName.TabIndex = 38;
             // 
@@ -393,6 +407,8 @@
             // 
             txtDinnerMinutes.Location = new System.Drawing.Point(680, 570);
             txtDinnerMinutes.Name = "txtDinnerMinutes";
+            txtDinnerMinutes.Properties.MaskSettings.Set("MaskManagerType", typeof(DevExpress.Data.Mask.NumericMaskManager));
+            txtDinnerMinutes.Properties.MaskSettings.Set("mask", "d");
             txtDinnerMinutes.Properties.ReadOnly = true;
             txtDinnerMinutes.Size = new System.Drawing.Size(107, 28);
             txtDinnerMinutes.TabIndex = 39;

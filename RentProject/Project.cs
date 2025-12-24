@@ -2,7 +2,11 @@
 using RentProject.Domain;
 using RentProject.Repository;
 using RentProject.Service;
+using RentProject.UIModels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace RentProject
 {
@@ -24,6 +28,15 @@ namespace RentProject
         // =========================
         private void Project_Load(object sender, EventArgs e)
         {
+            startDateEdit.EditValue = DateTime.Today;
+            endDateEdit.EditValue = DateTime.Today;
+
+            startTimeEdit.EditValue = DateTime.Now;
+            endTimeEdit.EditValue = DateTime.Now;
+
+            cmbProjectNo.Properties.Items.Clear();
+            cmbProjectNo.Properties.Items.AddRange(_projects.Select(x => x.ProjectNo).ToArray());
+
             ApplyLunchUI();
             ApplyDinnerUI();
             UpdateEstimatedUI();
@@ -67,34 +80,41 @@ namespace RentProject
             UpdateEstimatedUI();
         }
 
-        private void startDateEdit_EditValueChanged_1(object sender, EventArgs e)
+        private void startDateEdit_EditValueChanged(object sender, EventArgs e)
         {
             UpdateEstimatedUI();
         }
 
-        private void endDateEdit_EditValueChanged_1(object sender, EventArgs e)
+        private void endDateEdit_EditValueChanged(object sender, EventArgs e)
         {
             UpdateEstimatedUI();
         }
 
-        private void startTimeEdit_EditValueChanged_1(object sender, EventArgs e)
+        private void startTimeEdit_EditValueChanged(object sender, EventArgs e)
         {
             UpdateEstimatedUI();
         }
 
-        private void endTimeEdit_EditValueChanged_1(object sender, EventArgs e)
+        private void endTimeEdit_EditValueChanged(object sender, EventArgs e)
         {
             UpdateEstimatedUI();
         }
 
-        private void txtDinnerMinutes_EditValueChanged_1(object sender, EventArgs e)
+        private void cmbLocation_EditValueChanged(object sender, EventArgs e)
         {
-            if (!int.TryParse(txtDinnerMinutes.Text, out _))
-            {
-                txtDinnerMinutes.Text = "0";
-            }
+            var location = cmbLocation.Text?.Trim() ?? "";
 
-            UpdateEstimatedUI();
+            var item = _locations.FirstOrDefault(x => x.Location == location);
+            txtArea.Text = item?.Area ?? "";   // 找不到就清空（或你也可顯示 "未知"）
+        }
+
+        private void cmbProjectNo_EditValueChanged(object sender, EventArgs e)
+        {
+            var projectNo = cmbProjectNo.Text?.Trim() ?? "";
+            var p = _projects.FirstOrDefault(x => x.ProjectNo == projectNo);
+
+            txtProjectName.Text = p?.ProjectName ?? "";
+            txtPE.Text = p?.PE ?? "";
         }
 
         // =========================
@@ -207,5 +227,42 @@ namespace RentProject
         {
             return int.TryParse(s?.Trim(), out var v) ? v : 0;
         }
+
+        // =========================
+        // 9) 區域綁定
+        // =========================
+
+        private readonly List<LocationItem> _locations = new()
+        {
+            new LocationItem { Location = "Conducted 1", Area = "五股" },
+            new LocationItem { Location = "Conducted 2", Area = "五股" },
+            new LocationItem { Location = "Conducted 3", Area = "五股" },
+            new LocationItem { Location = "Conducted 4", Area = "五股" },
+            new LocationItem { Location = "Conducted 5", Area = "五股" },
+            new LocationItem { Location = "Conducted 6", Area = "五股" },
+            new LocationItem { Location = "SAC 1", Area = "五股" },
+            new LocationItem { Location = "SAC 2", Area = "五股" },
+            new LocationItem { Location = "SAC 3", Area = "五股" },
+            new LocationItem { Location = "FAC 1", Area = "五股" },
+            new LocationItem { Location = "Setup Room 1", Area = "五股" },
+            new LocationItem { Location = "Conducted A", Area = "華亞" },
+            new LocationItem { Location = "Conducted B", Area = "華亞" },
+            new LocationItem { Location = "Conducted C", Area = "華亞" },
+            new LocationItem { Location = "Conducted D", Area = "華亞" },
+            new LocationItem { Location = "Conducted E", Area = "華亞" },
+            new LocationItem { Location = "Conducted F", Area = "華亞" },
+            new LocationItem { Location = "SAC C", Area = "華亞" },
+            new LocationItem { Location = "SAC D", Area = "華亞" },
+            new LocationItem { Location = "SAC G", Area = "華亞" },
+            new LocationItem { Location = "FAC A", Area = "華亞" },
+            new LocationItem { Location = "Setup Room A", Area = "華亞" },
+        };
+
+        private readonly List<ProjectItem> _projects = new()
+        {
+            new() { ProjectNo = "TE25113000123456", ProjectName = "Smart 5G WPC", PE = "Martin_Liu" },
+            new() { ProjectNo = "TE25113000123789", ProjectName = "Smart 2.4G WPC", PE = "Martin_Liu" },
+        };
+
     }
 }
