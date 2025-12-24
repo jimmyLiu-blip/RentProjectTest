@@ -412,6 +412,7 @@
             txtDinnerMinutes.Properties.ReadOnly = true;
             txtDinnerMinutes.Size = new System.Drawing.Size(107, 28);
             txtDinnerMinutes.TabIndex = 39;
+            txtDinnerMinutes.EditValueChanged += txtDinnerMinutes_EditValueChanged;
             // 
             // txtLunchMinutes
             // 

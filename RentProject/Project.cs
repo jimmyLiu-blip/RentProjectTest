@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraSpreadsheet.Import.OpenXml;
 using RentProject.Domain;
 using RentProject.Repository;
 using RentProject.Service;
@@ -13,14 +14,20 @@ namespace RentProject
     public partial class Project : XtraForm
     {
         private readonly RentTimeService _service;
+        private readonly DapperProjectRepository _projectRepo;
+        private List<ProjectItem> _projects = new();
+
+        private static readonly TimeSpan LunchEnableAt = new(13, 0, 0);
+        private static readonly TimeSpan DinnerEnableAt = new(18, 0, 0);
 
         // =========================
         // 1) 欄位 / 建構子
         // =========================
-        public Project(RentTimeService service)
+        public Project(RentTimeService service, DapperProjectRepository projectRepo)
         {
             InitializeComponent();
             _service = service;
+            _projectRepo = projectRepo;
         }
 
         // =========================
@@ -28,17 +35,18 @@ namespace RentProject
         // =========================
         private void Project_Load(object sender, EventArgs e)
         {
+            _projects = _projectRepo.GetActiveProject();
+
+            cmbProjectNo.Properties.Items.Clear();
+            cmbProjectNo.Properties.Items.AddRange(_projects.Select(p => p.ProjectNo).ToArray());
+
             startDateEdit.EditValue = DateTime.Today;
             endDateEdit.EditValue = DateTime.Today;
 
             startTimeEdit.EditValue = DateTime.Now;
             endTimeEdit.EditValue = DateTime.Now;
 
-            cmbProjectNo.Properties.Items.Clear();
-            cmbProjectNo.Properties.Items.AddRange(_projects.Select(x => x.ProjectNo).ToArray());
-
-            ApplyLunchUI();
-            ApplyDinnerUI();
+            ApplyMealEnableByEndTime();
             UpdateEstimatedUI();
         }
 
@@ -82,20 +90,29 @@ namespace RentProject
 
         private void startDateEdit_EditValueChanged(object sender, EventArgs e)
         {
+            ApplyMealEnableByEndTime();
             UpdateEstimatedUI();
         }
 
         private void endDateEdit_EditValueChanged(object sender, EventArgs e)
         {
+            ApplyMealEnableByEndTime();
             UpdateEstimatedUI();
         }
 
         private void startTimeEdit_EditValueChanged(object sender, EventArgs e)
         {
+            ApplyMealEnableByEndTime();
             UpdateEstimatedUI();
         }
 
         private void endTimeEdit_EditValueChanged(object sender, EventArgs e)
+        {
+            ApplyMealEnableByEndTime();
+            UpdateEstimatedUI();
+        }
+
+        private void txtDinnerMinutes_EditValueChanged(object sender, EventArgs e)
         {
             UpdateEstimatedUI();
         }
@@ -111,10 +128,11 @@ namespace RentProject
         private void cmbProjectNo_EditValueChanged(object sender, EventArgs e)
         {
             var projectNo = cmbProjectNo.Text?.Trim() ?? "";
+
             var p = _projects.FirstOrDefault(x => x.ProjectNo == projectNo);
 
             txtProjectName.Text = p?.ProjectName ?? "";
-            txtPE.Text = p?.PE ?? "";
+            txtPE.Text = p?.JobPM ?? "";
         }
 
         // =========================
@@ -141,6 +159,37 @@ namespace RentProject
                 txtDinnerMinutes.Text = "0";
                 return;
             }
+        }
+
+        private void ApplyMealEnableByEndTime()
+        {
+            // 取結束日期 + 結束時間
+            var endDate = endDateEdit.EditValue as DateTime?;
+            var endTime = endTimeEdit.EditValue is DateTime t ? t.TimeOfDay : (TimeSpan?)null;
+
+            // 預設：不可勾選
+            bool canLunch = false;
+            bool canDinner = false;
+
+            // 只要結束日期/結束時間有效，才能判斷門檻
+            if (endDate is not null && endTime is not null)
+            {
+                var end = endDate.Value.Date + endTime.Value;
+                canLunch = end.TimeOfDay >= LunchEnableAt;
+                canDinner = end.TimeOfDay >= DinnerEnableAt;
+            }
+
+            // 午餐：不到 13:00 → 禁用 + 強制取消
+            chkHasLunch.Enabled = canLunch;
+            if (!canLunch) chkHasLunch.Checked = false;
+
+            // 晚餐：不到 18:00 → 禁用 + 強制取消
+            chkHasDinner.Enabled = canDinner;
+            if (!canDinner) chkHasDinner.Checked = false;
+
+            // 依目前勾選狀態，把分鐘/唯讀套回去
+            ApplyLunchUI();
+            ApplyDinnerUI();
         }
 
         // =========================
@@ -257,12 +306,5 @@ namespace RentProject
             new LocationItem { Location = "FAC A", Area = "華亞" },
             new LocationItem { Location = "Setup Room A", Area = "華亞" },
         };
-
-        private readonly List<ProjectItem> _projects = new()
-        {
-            new() { ProjectNo = "TE25113000123456", ProjectName = "Smart 5G WPC", PE = "Martin_Liu" },
-            new() { ProjectNo = "TE25113000123789", ProjectName = "Smart 2.4G WPC", PE = "Martin_Liu" },
-        };
-
     }
 }

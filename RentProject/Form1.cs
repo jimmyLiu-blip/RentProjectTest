@@ -8,8 +8,9 @@ namespace RentProject
 {
     public partial class Form1 : RibbonForm
     {
-        private readonly DapperRentTimeRepository _repo;
+        private readonly DapperRentTimeRepository _rentTimeRepo;
         private readonly RentTimeService _service;
+        private readonly DapperProjectRepository _projectRepo;
 
         public Form1()
         {
@@ -20,20 +21,21 @@ namespace RentProject
                 .ConnectionStrings["DefaultConnection"]
                 .ConnectionString;
 
-            _repo = new DapperRentTimeRepository(connectionString);
-            _service = new RentTimeService(_repo);
+            _rentTimeRepo = new DapperRentTimeRepository(connectionString);
+            _service = new RentTimeService(_rentTimeRepo);
+            _projectRepo = new DapperProjectRepository(connectionString);
         }
 
         private void btnAddRentTime_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            var form = new Project(_service);
+            var form = new Project(_service, _projectRepo);
 
             form.ShowDialog();
         }
 
         private void btnTestConnection_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            string msg = _repo.TestConnection();
+            string msg = _rentTimeRepo.TestConnection();
 
             XtraMessageBox.Show(msg, "TestConnection");
         }
