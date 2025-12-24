@@ -1,8 +1,9 @@
-﻿using RentProject.Repository;
-using System.Configuration;
+﻿using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
+using RentProject.Repository;
 using RentProject.Service;
-using DevExpress.XtraBars.Ribbon;
+using System.Configuration;
+using System.Windows.Forms;
 
 namespace RentProject
 {
@@ -11,6 +12,12 @@ namespace RentProject
         private readonly DapperRentTimeRepository _rentTimeRepo;
         private readonly RentTimeService _service;
         private readonly DapperProjectRepository _projectRepo;
+
+        private ProjectViewControl _projectView;
+        private CalendarViewControl _calendarView;
+
+        // true = 目前顯示 CalendarView；false = 目前顯示 ProjectView
+        private bool _isCalendarView = true;
 
         public Form1()
         {
@@ -26,6 +33,18 @@ namespace RentProject
             _projectRepo = new DapperProjectRepository(connectionString);
         }
 
+        private void Form1_Load(object sender, System.EventArgs e)
+        {
+            _projectView = new ProjectViewControl { Dock = DockStyle.Fill };
+            _calendarView = new CalendarViewControl { Dock = DockStyle.Fill };
+
+            mainPanel.Controls.Add(_projectView);
+            mainPanel.Controls.Add(_calendarView);
+
+            ShowCalendarView();
+        }
+
+
         private void btnAddRentTime_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             var form = new Project(_service, _projectRepo);
@@ -38,6 +57,39 @@ namespace RentProject
             string msg = _rentTimeRepo.TestConnection();
 
             XtraMessageBox.Show(msg, "TestConnection");
+        }
+
+        private void ShowProjectView()
+        {
+            RefreshProjectView();
+            _projectView.BringToFront();
+
+            _isCalendarView = false;
+            btnView.Caption = "切換到日曆";
+        }
+
+        private void ShowCalendarView()
+        {
+            _calendarView.BringToFront();
+            _isCalendarView = true;
+
+            btnView.Caption = "切換到案件";
+        }
+
+        private void btnView_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (_isCalendarView)
+            {
+                ShowProjectView();
+            }
+            else
+                ShowCalendarView();
+        }
+
+        private void RefreshProjectView()
+        { 
+            var list = _service.GetProjectViewList();
+            _projectView.LoadData(list);
         }
     }
 }

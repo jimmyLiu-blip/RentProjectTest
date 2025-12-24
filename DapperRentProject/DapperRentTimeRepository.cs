@@ -63,7 +63,7 @@ namespace RentProject.Repository
                     @HasLunch, @LunchMinutes, @HasDinner, @DinnerMinutes
                 );";
 
-                int rentTimeId = connection.ExecuteScalar<int>(insertSql, new 
+                int rentTimeId = connection.ExecuteScalar<int>(insertSql, new
                 {
                     model.CreatedBy,
                     model.Area,
@@ -96,7 +96,7 @@ namespace RentProject.Repository
                     model.HasDinner,
                     model.DinnerMinutes,
 
-                }, transaction:tx);
+                }, transaction: tx);
 
                 string bookingNo = $"RF-{rentTimeId:D8}";
 
@@ -118,11 +118,27 @@ namespace RentProject.Repository
                     BookingNo = bookingNo,
                 };
             }
-            catch 
+            catch
             {
                 try { tx.Rollback(); } catch { }
                 throw;
             }
+        }
+
+        public List<RentTime> GetActiveRentTimesForProjectView()
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            connection.Open();
+
+            var sql = @"SELECT
+                        BookingNo, Area, Location, CustomerName, PE, 
+                        StartDate, EndDate,ProjectNo,ProjectName
+                        FROM dbo.RentTimes
+                        WHERE IsDeleted = 0
+                        ORDER BY CreatedDate DESC;";
+
+            return connection.Query<RentTime>(sql).ToList();
         }
     }
 }

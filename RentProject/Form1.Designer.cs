@@ -33,15 +33,18 @@
             ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             btnAddRentTime = new DevExpress.XtraBars.BarButtonItem();
+            btnTestConnection = new DevExpress.XtraBars.BarButtonItem();
             ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             barManager1 = new DevExpress.XtraBars.BarManager(components);
             barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            btnTestConnection = new DevExpress.XtraBars.BarButtonItem();
+            mainPanel = new DevExpress.XtraEditors.PanelControl();
+            btnView = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)ribbonControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)barManager1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)mainPanel).BeginInit();
             SuspendLayout();
             // 
             // ribbonPage1
@@ -55,6 +58,7 @@
             ribbonPageGroup1.AllowTextClipping = false;
             ribbonPageGroup1.ItemLinks.Add(btnAddRentTime);
             ribbonPageGroup1.ItemLinks.Add(btnTestConnection);
+            ribbonPageGroup1.ItemLinks.Add(btnView);
             ribbonPageGroup1.Name = "ribbonPageGroup1";
             ribbonPageGroup1.Text = "管理租時單";
             // 
@@ -67,15 +71,24 @@
             btnAddRentTime.Name = "btnAddRentTime";
             btnAddRentTime.ItemClick += btnAddRentTime_ItemClick;
             // 
+            // btnTestConnection
+            // 
+            btnTestConnection.Caption = "連線測試";
+            btnTestConnection.Id = 2;
+            btnTestConnection.ImageOptions.Image = (System.Drawing.Image)resources.GetObject("btnTestConnection.ImageOptions.Image");
+            btnTestConnection.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("btnTestConnection.ImageOptions.LargeImage");
+            btnTestConnection.Name = "btnTestConnection";
+            btnTestConnection.ItemClick += btnTestConnection_ItemClick;
+            // 
             // ribbonControl1
             // 
             ribbonControl1.AllowMinimizeRibbon = false;
             ribbonControl1.EmptyAreaImageOptions.ImagePadding = new System.Windows.Forms.Padding(50, 51, 50, 51);
             ribbonControl1.ExpandCollapseItem.Id = 0;
-            ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl1.ExpandCollapseItem, btnAddRentTime, btnTestConnection });
+            ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl1.ExpandCollapseItem, btnAddRentTime, btnTestConnection, btnView });
             ribbonControl1.Location = new System.Drawing.Point(0, 0);
             ribbonControl1.Margin = new System.Windows.Forms.Padding(5);
-            ribbonControl1.MaxItemId = 3;
+            ribbonControl1.MaxItemId = 4;
             ribbonControl1.Name = "ribbonControl1";
             ribbonControl1.OptionsMenuMinWidth = 550;
             ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { ribbonPage1 });
@@ -128,20 +141,29 @@
             barDockControlRight.Manager = barManager1;
             barDockControlRight.Size = new System.Drawing.Size(0, 984);
             // 
-            // btnTestConnection
+            // mainPanel
             // 
-            btnTestConnection.Caption = "連線測試";
-            btnTestConnection.Id = 2;
-            btnTestConnection.ImageOptions.Image = (System.Drawing.Image)resources.GetObject("btnTestConnection.ImageOptions.Image");
-            btnTestConnection.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("btnTestConnection.ImageOptions.LargeImage");
-            btnTestConnection.Name = "btnTestConnection";
-            btnTestConnection.ItemClick += btnTestConnection_ItemClick;
+            mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            mainPanel.Location = new System.Drawing.Point(0, 237);
+            mainPanel.Name = "mainPanel";
+            mainPanel.Size = new System.Drawing.Size(1859, 747);
+            mainPanel.TabIndex = 5;
+            // 
+            // btnView
+            // 
+            btnView.Caption = "切換檢視模式";
+            btnView.Id = 3;
+            btnView.ImageOptions.Image = (System.Drawing.Image)resources.GetObject("btnView.ImageOptions.Image");
+            btnView.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("btnView.ImageOptions.LargeImage");
+            btnView.Name = "btnView";
+            btnView.ItemClick += btnView_ItemClick;
             // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(1859, 984);
+            Controls.Add(mainPanel);
             Controls.Add(ribbonControl1);
             Controls.Add(barDockControlLeft);
             Controls.Add(barDockControlRight);
@@ -152,8 +174,10 @@
             Name = "Form1";
             Ribbon = ribbonControl1;
             Text = "RentalSystem";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)ribbonControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)barManager1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)mainPanel).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -171,6 +195,8 @@
         private DevExpress.XtraBars.BarDockControl barDockControlLeft;
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
         private DevExpress.XtraBars.BarButtonItem btnTestConnection;
+        private DevExpress.XtraEditors.PanelControl mainPanel;
+        private DevExpress.XtraBars.BarButtonItem btnView;
     }
 }
 

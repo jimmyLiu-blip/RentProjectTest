@@ -20,6 +20,11 @@ namespace RentProject.Service
             return _repo.CreateRentTime(model);
         }
 
+        public List<RentTime> GetProjectViewList()
+        {
+            return _repo.GetActiveRentTimesForProjectView();
+        }
+
         private static void ValidateRequired(RentTime model)
         {
             if (string.IsNullOrWhiteSpace(model.Area)) throw new Exception("Area 必填");
