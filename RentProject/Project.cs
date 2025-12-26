@@ -22,6 +22,9 @@ namespace RentProject
         private static readonly TimeSpan LunchEnableAt = new(13, 0, 0);
         private static readonly TimeSpan DinnerEnableAt = new(18, 0, 0);
 
+        // 編輯租時單
+        private readonly int? _editRentTimeId = null;
+
         private readonly List<LocationItem> _locations = new()
         {
             new LocationItem { Location = "Conducted 1", Area = "WG" },
@@ -51,11 +54,16 @@ namespace RentProject
         // =========================
         // 2) 建構子
         // =========================
-        public Project(RentTimeService rentTimeService, ProjectService projectRepo)
+        public Project(RentTimeService rentTimeService, ProjectService projectService)
         {
             InitializeComponent();
             _rentTimeService = rentTimeService;
-            _projectService = projectRepo;
+            _projectService = projectService;
+        }
+
+        public Project(RentTimeService rentTimeService, ProjectService projectService, int rentTimeId):this(rentTimeService, projectService)
+        { 
+            _editRentTimeId = rentTimeId;
         }
 
         // =========================
@@ -75,6 +83,12 @@ namespace RentProject
             endTimeEdit.EditValue = null;
 
             RefreshMealAndEstimateUI();
+
+            if (_editRentTimeId != null)
+            {
+                var data = _rentTimeService.GetRentTimeById(_editRentTimeId.Value);
+                btnCreatedRentTime.Text = "儲存修改";
+            }
         }
 
         // =========================

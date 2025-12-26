@@ -12,6 +12,7 @@ namespace RentProject.Service
             _repo = repo;
         }
 
+        // 新增租時單
         public CreateRentTimeResult CreateRentTime(RentTime model)
         {
             ValidateRequired(model);
@@ -20,10 +21,33 @@ namespace RentProject.Service
             return _repo.CreateRentTime(model);
         }
 
+        // 取得案件清單
         public List<RentTime> GetProjectViewList()
         {
             return _repo.GetActiveRentTimesForProjectView();
         }
+
+        // 透過編號取得租時單
+        public RentTime GetRentTimeById(int rentTimeId)
+        {
+            var data = _repo.GetRentTimeById(rentTimeId);
+
+            if (data == null)
+            {
+                throw new Exception($"找不到 RentTimeId={rentTimeId}");
+            }
+
+            return data;
+        }
+
+        // 透過編號更新租時單
+        public void UpdateRentTimeById(RentTime model)
+        {
+            if (model.RentTimeId <= 0) throw new Exception("RentTimeId 不正確");
+            var rows = _repo.UpdateRentTime(model);
+            if (rows != 1) throw new Exception($"更新失敗，受影響比數={rows}");
+        }
+
 
         private static void ValidateRequired(RentTime model)
         {

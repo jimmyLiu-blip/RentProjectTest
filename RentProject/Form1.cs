@@ -33,13 +33,13 @@ namespace RentProject
             _rentTimeservice = new RentTimeService(_rentTimeRepo);
             _projectRepo = new DapperProjectRepository(connectionString);
             _projectService = new ProjectService(_projectRepo);
+
+            _projectView = new ProjectViewControl(_rentTimeservice) { Dock = DockStyle.Fill };
+            _calendarView = new CalendarViewControl { Dock = DockStyle.Fill };
         }
 
         private void Form1_Load(object sender, System.EventArgs e)
         {
-            _projectView = new ProjectViewControl { Dock = DockStyle.Fill };
-            _calendarView = new CalendarViewControl { Dock = DockStyle.Fill };
-
             mainPanel.Controls.Add(_projectView);
             mainPanel.Controls.Add(_calendarView);
 

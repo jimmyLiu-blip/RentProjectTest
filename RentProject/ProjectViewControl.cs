@@ -1,6 +1,4 @@
 ﻿using DevExpress.Data;
-using DevExpress.Images;
-using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
@@ -10,15 +8,24 @@ using RentProject.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RentProject.Service;
 
 
 namespace RentProject
 {
     public partial class ProjectViewControl : XtraUserControl
     {
+        private readonly RentTimeService _rentTimeService;
+
         public ProjectViewControl()
         {
             InitializeComponent();
+        }
+
+        public ProjectViewControl(RentTimeService rentTimeService):this()
+        {
+            _rentTimeService = rentTimeService 
+                ?? throw new ArgumentNullException(nameof(rentTimeService));
         }
 
         public void LoadData(List<RentTime> list)
@@ -101,9 +108,10 @@ namespace RentProject
             var row = gridView1.GetRow(gridView1.FocusedRowHandle) as RentTime; // FocusedRowHandle：目前選到的那一列
             if (row == null) return;                                // GetRow(handle)：把那一列的資料物件取出來（就是 RentTime）
 
-            XtraMessageBox.Show($"你點到:{row.BookingNo}\nRentTimeId:{row.RentTimeId}", "Action");
-        }
+            var data = _rentTimeService.GetRentTimeById(row.RentTimeId);
 
+            XtraMessageBox.Show($"DB查回:{data.BookingNo}\nCreatedBy={data.CreatedBy}", "GetById OK");
+        }
 
         private void gridControl1_Click(object sender, EventArgs e)
         {

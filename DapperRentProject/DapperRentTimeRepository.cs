@@ -14,6 +14,7 @@ namespace RentProject.Repository
             _connectionString = connectionString;
         }
 
+        // 連線測試
         public string TestConnection()
         {
             try
@@ -34,6 +35,7 @@ namespace RentProject.Repository
             }
         }
 
+        // 新增租時單
         public CreateRentTimeResult CreateRentTime(RentTime model)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -125,6 +127,7 @@ namespace RentProject.Repository
             }
         }
 
+        // 取得未刪除的所有案件
         public List<RentTime> GetActiveRentTimesForProjectView()
         {
             using var connection = new SqlConnection(_connectionString);
@@ -139,6 +142,64 @@ namespace RentProject.Repository
                         ORDER BY CreatedDate DESC;";
 
             return connection.Query<RentTime>(sql).ToList();
+        }
+
+        // 透過案件編號查詢租時單
+        public RentTime? GetRentTimeById(int rentTimeId)
+        { 
+            using var connection = new SqlConnection(_connectionString);
+
+            connection.Open();
+
+            var sql = @"SELECT 
+                        RentTimeId, BookingNo, Area, CustomerName, Sales, CreatedBy,
+                        ContactName, Phone, TestInformation, ProjectNo, ProjectName,
+                        PE, Location, StartDate, EndDate, StartTime, EndTime, HasLunch,
+                        LunchMinutes, HasDinner, DinnerMinutes, EngineerName, SampleModel,
+                        TestMode, TestItem, Notes
+                        FROM dbo.RentTimes
+                        WHERE RentTimeId = @RentTimeId;";
+
+            return connection.QueryFirstOrDefault<RentTime>(sql, new { RentTimeId = rentTimeId });
+        }
+
+        // 更新租時單
+        public int UpdateRentTime(RentTime model)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            connection.Open();
+
+            var sql = @"UPDATE dbo.RentTimes
+                        SET 
+                        Area = @Area,
+                        CustomerName = @CustomerName,
+                        Sales = @Sales,
+                        CreatedBy = @CreatedBy,
+                        ContactName = @ContactName,
+                        Phone = @Phone,
+                        TestInformation = @TestInformation,
+                        ProjectNo = @ProjectNo,
+                        ProjectName = @ProjectName,
+                        PE = @PE,
+                        Location = @Location,
+                        StartDate = @StartDate,
+                        EndDate = @EndDate,
+                        StartTime = @StartTime,
+                        EndTime = @EndTime,
+                        HasLunch = @HasLunch,
+                        LunchMinutes = @LunchMinutes,
+                        HasDinner = @HasDinner,
+                        DinnerMinutes = @DinnerMinutes,
+                        EngineerName = @EngineerName,
+                        SampleModel = @SampleModel,
+                        SampleNo = @SampleNo,
+                        TestMode = @TestMode,
+                        TestItem = @TestItem,
+                        Notes = @Notes
+                        WHERE RentTimeId = @RentTimeId;";
+
+            return connection.Execute(sql, model);
         }
     }
 }
