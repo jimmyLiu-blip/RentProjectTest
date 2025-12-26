@@ -10,7 +10,8 @@ namespace RentProject
     public partial class Form1 : RibbonForm
     {
         private readonly DapperRentTimeRepository _rentTimeRepo;
-        private readonly RentTimeService _service;
+        private readonly RentTimeService _rentTimeservice;
+        private readonly ProjectService _projectService;
         private readonly DapperProjectRepository _projectRepo;
 
         private ProjectViewControl _projectView;
@@ -29,8 +30,9 @@ namespace RentProject
                 .ConnectionString;
 
             _rentTimeRepo = new DapperRentTimeRepository(connectionString);
-            _service = new RentTimeService(_rentTimeRepo);
+            _rentTimeservice = new RentTimeService(_rentTimeRepo);
             _projectRepo = new DapperProjectRepository(connectionString);
+            _projectService = new ProjectService(_projectRepo);
         }
 
         private void Form1_Load(object sender, System.EventArgs e)
@@ -47,7 +49,7 @@ namespace RentProject
 
         private void btnAddRentTime_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            var form = new Project(_service, _projectRepo);
+            var form = new Project(_rentTimeservice, _projectService);
 
             form.ShowDialog();
         }
@@ -88,7 +90,7 @@ namespace RentProject
 
         private void RefreshProjectView()
         { 
-            var list = _service.GetProjectViewList();
+            var list = _rentTimeservice.GetProjectViewList();
             _projectView.LoadData(list);
         }
     }

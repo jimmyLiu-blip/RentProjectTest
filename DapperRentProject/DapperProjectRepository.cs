@@ -13,7 +13,7 @@ namespace RentProject.Repository
             _connectionString = connectionString;
         }
 
-        public List<ProjectItem> GetActiveProject()
+        public List<ProjectItem> GetActiveProjects()
         {
             using var connection = new SqlConnection(_connectionString);
 

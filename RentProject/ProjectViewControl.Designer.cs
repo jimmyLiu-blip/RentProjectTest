@@ -47,8 +47,14 @@
             // 
             // gridView1
             // 
+            gridView1.Appearance.HeaderPanel.Options.UseTextOptions = true;
+            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             gridView1.GridControl = gridControl1;
             gridView1.Name = "gridView1";
+            gridView1.OptionsBehavior.ReadOnly = true;
+            gridView1.OptionsCustomization.AllowFilter = false;
+            gridView1.OptionsCustomization.AllowSort = false;
+            gridView1.OptionsFilter.AllowFilterEditor = false;
             gridView1.OptionsFilter.InHeaderSearchMode = DevExpress.XtraGrid.Views.Grid.GridInHeaderSearchMode.Disabled;
             gridView1.OptionsView.ShowGroupPanel = false;
             // 

@@ -128,7 +128,7 @@
             // 
             // labelControl3
             // 
-            labelControl3.Location = new System.Drawing.Point(44, 161);
+            labelControl3.Location = new System.Drawing.Point(44, 158);
             labelControl3.Name = "labelControl3";
             labelControl3.Size = new System.Drawing.Size(72, 22);
             labelControl3.TabIndex = 3;
@@ -136,7 +136,7 @@
             // 
             // labelControl4
             // 
-            labelControl4.Location = new System.Drawing.Point(44, 221);
+            labelControl4.Location = new System.Drawing.Point(44, 212);
             labelControl4.Name = "labelControl4";
             labelControl4.Size = new System.Drawing.Size(54, 22);
             labelControl4.TabIndex = 4;
@@ -144,7 +144,7 @@
             // 
             // labelControl5
             // 
-            labelControl5.Location = new System.Drawing.Point(44, 276);
+            labelControl5.Location = new System.Drawing.Point(44, 266);
             labelControl5.Name = "labelControl5";
             labelControl5.Size = new System.Drawing.Size(72, 22);
             labelControl5.TabIndex = 5;
@@ -176,7 +176,7 @@
             // 
             // labelControl9
             // 
-            labelControl9.Location = new System.Drawing.Point(44, 576);
+            labelControl9.Location = new System.Drawing.Point(44, 570);
             labelControl9.Name = "labelControl9";
             labelControl9.Size = new System.Drawing.Size(72, 22);
             labelControl9.TabIndex = 9;
@@ -184,7 +184,7 @@
             // 
             // labelControl10
             // 
-            labelControl10.Location = new System.Drawing.Point(315, 528);
+            labelControl10.Location = new System.Drawing.Point(315, 525);
             labelControl10.Name = "labelControl10";
             labelControl10.Size = new System.Drawing.Size(72, 22);
             labelControl10.TabIndex = 10;
@@ -192,7 +192,7 @@
             // 
             // labelControl11
             // 
-            labelControl11.Location = new System.Drawing.Point(315, 576);
+            labelControl11.Location = new System.Drawing.Point(315, 570);
             labelControl11.Name = "labelControl11";
             labelControl11.Size = new System.Drawing.Size(72, 22);
             labelControl11.TabIndex = 11;
@@ -200,7 +200,7 @@
             // 
             // labelControl12
             // 
-            labelControl12.Location = new System.Drawing.Point(315, 621);
+            labelControl12.Location = new System.Drawing.Point(315, 615);
             labelControl12.Name = "labelControl12";
             labelControl12.Size = new System.Drawing.Size(72, 22);
             labelControl12.TabIndex = 12;
@@ -216,7 +216,7 @@
             // 
             // labelControl16
             // 
-            labelControl16.Location = new System.Drawing.Point(44, 743);
+            labelControl16.Location = new System.Drawing.Point(44, 735);
             labelControl16.Name = "labelControl16";
             labelControl16.Size = new System.Drawing.Size(72, 22);
             labelControl16.TabIndex = 16;
@@ -224,7 +224,7 @@
             // 
             // labelControl17
             // 
-            labelControl17.Location = new System.Drawing.Point(44, 799);
+            labelControl17.Location = new System.Drawing.Point(44, 783);
             labelControl17.Name = "labelControl17";
             labelControl17.Size = new System.Drawing.Size(72, 22);
             labelControl17.TabIndex = 17;
@@ -232,7 +232,7 @@
             // 
             // labelControl18
             // 
-            labelControl18.Location = new System.Drawing.Point(44, 851);
+            labelControl18.Location = new System.Drawing.Point(44, 831);
             labelControl18.Name = "labelControl18";
             labelControl18.Size = new System.Drawing.Size(90, 22);
             labelControl18.TabIndex = 18;
@@ -240,7 +240,7 @@
             // 
             // labelControl19
             // 
-            labelControl19.Location = new System.Drawing.Point(44, 905);
+            labelControl19.Location = new System.Drawing.Point(44, 879);
             labelControl19.Name = "labelControl19";
             labelControl19.Size = new System.Drawing.Size(54, 22);
             labelControl19.TabIndex = 19;
@@ -256,7 +256,7 @@
             // 
             // labelControl21
             // 
-            labelControl21.Location = new System.Drawing.Point(425, 743);
+            labelControl21.Location = new System.Drawing.Point(425, 735);
             labelControl21.Name = "labelControl21";
             labelControl21.Size = new System.Drawing.Size(72, 22);
             labelControl21.TabIndex = 21;
@@ -264,7 +264,7 @@
             // 
             // labelControl22
             // 
-            labelControl22.Location = new System.Drawing.Point(425, 161);
+            labelControl22.Location = new System.Drawing.Point(425, 158);
             labelControl22.Name = "labelControl22";
             labelControl22.Size = new System.Drawing.Size(40, 22);
             labelControl22.TabIndex = 22;
@@ -272,7 +272,7 @@
             // 
             // labelControl23
             // 
-            labelControl23.Location = new System.Drawing.Point(425, 221);
+            labelControl23.Location = new System.Drawing.Point(425, 212);
             labelControl23.Name = "labelControl23";
             labelControl23.Size = new System.Drawing.Size(36, 22);
             labelControl23.TabIndex = 23;
@@ -280,7 +280,7 @@
             // 
             // cmbProjectNo
             // 
-            cmbProjectNo.Location = new System.Drawing.Point(162, 404);
+            cmbProjectNo.Location = new System.Drawing.Point(162, 410);
             cmbProjectNo.Name = "cmbProjectNo";
             cmbProjectNo.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             cmbProjectNo.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
@@ -290,7 +290,7 @@
             // 
             // cmbLocation
             // 
-            cmbLocation.Location = new System.Drawing.Point(162, 684);
+            cmbLocation.Location = new System.Drawing.Point(162, 687);
             cmbLocation.Name = "cmbLocation";
             cmbLocation.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             cmbLocation.Properties.Items.AddRange(new object[] { "Conducted 1", "Conducted 2", "Conducted 3", "Conducted 4", "Conducted 5", "Conducted 6", "Setup Room 1", "SAC 1", "SAC 2", "SAC 3", "FAC 1", "Conducted A", "Conducted B", " Conducted C", "Conducted D", "Conducted E", "Conducted F", "Setup Room A", "SAC C", "SAC D", "SAC G", "FAC A" });
@@ -302,7 +302,7 @@
             // startDateEdit
             // 
             startDateEdit.EditValue = null;
-            startDateEdit.Location = new System.Drawing.Point(138, 522);
+            startDateEdit.Location = new System.Drawing.Point(138, 525);
             startDateEdit.Name = "startDateEdit";
             startDateEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
             startDateEdit.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
@@ -345,7 +345,7 @@
             // 
             // txtBookingNo
             // 
-            txtBookingNo.Location = new System.Drawing.Point(162, 44);
+            txtBookingNo.Location = new System.Drawing.Point(162, 50);
             txtBookingNo.Name = "txtBookingNo";
             txtBookingNo.Properties.ReadOnly = true;
             txtBookingNo.Size = new System.Drawing.Size(439, 28);
@@ -353,7 +353,7 @@
             // 
             // txtArea
             // 
-            txtArea.Location = new System.Drawing.Point(162, 98);
+            txtArea.Location = new System.Drawing.Point(162, 104);
             txtArea.Name = "txtArea";
             txtArea.Properties.ReadOnly = true;
             txtArea.Size = new System.Drawing.Size(225, 28);
@@ -368,28 +368,28 @@
             // 
             // txtContact
             // 
-            txtContact.Location = new System.Drawing.Point(162, 215);
+            txtContact.Location = new System.Drawing.Point(162, 212);
             txtContact.Name = "txtContact";
             txtContact.Size = new System.Drawing.Size(225, 28);
             txtContact.TabIndex = 33;
             // 
             // txtSales
             // 
-            txtSales.Location = new System.Drawing.Point(562, 155);
+            txtSales.Location = new System.Drawing.Point(562, 158);
             txtSales.Name = "txtSales";
             txtSales.Size = new System.Drawing.Size(225, 28);
             txtSales.TabIndex = 35;
             // 
             // txtPhone
             // 
-            txtPhone.Location = new System.Drawing.Point(562, 215);
+            txtPhone.Location = new System.Drawing.Point(562, 212);
             txtPhone.Name = "txtPhone";
             txtPhone.Size = new System.Drawing.Size(225, 28);
             txtPhone.TabIndex = 36;
             // 
             // txtPE
             // 
-            txtPE.Location = new System.Drawing.Point(162, 450);
+            txtPE.Location = new System.Drawing.Point(162, 456);
             txtPE.Name = "txtPE";
             txtPE.Properties.ReadOnly = true;
             txtPE.Size = new System.Drawing.Size(225, 28);
@@ -397,7 +397,7 @@
             // 
             // txtProjectName
             // 
-            txtProjectName.Location = new System.Drawing.Point(562, 407);
+            txtProjectName.Location = new System.Drawing.Point(562, 410);
             txtProjectName.Name = "txtProjectName";
             txtProjectName.Properties.ReadOnly = true;
             txtProjectName.Size = new System.Drawing.Size(225, 28);
@@ -424,7 +424,7 @@
             // 
             // txtEstimatedHours
             // 
-            txtEstimatedHours.Location = new System.Drawing.Point(415, 618);
+            txtEstimatedHours.Location = new System.Drawing.Point(415, 615);
             txtEstimatedHours.Name = "txtEstimatedHours";
             txtEstimatedHours.Properties.ReadOnly = true;
             txtEstimatedHours.Size = new System.Drawing.Size(151, 28);
@@ -432,42 +432,42 @@
             // 
             // txtSampleModel
             // 
-            txtSampleModel.Location = new System.Drawing.Point(162, 740);
+            txtSampleModel.Location = new System.Drawing.Point(162, 735);
             txtSampleModel.Name = "txtSampleModel";
             txtSampleModel.Size = new System.Drawing.Size(225, 28);
             txtSampleModel.TabIndex = 42;
             // 
             // txtTestMode
             // 
-            txtTestMode.Location = new System.Drawing.Point(162, 793);
+            txtTestMode.Location = new System.Drawing.Point(162, 783);
             txtTestMode.Name = "txtTestMode";
-            txtTestMode.Size = new System.Drawing.Size(225, 28);
+            txtTestMode.Size = new System.Drawing.Size(625, 28);
             txtTestMode.TabIndex = 43;
             // 
             // txtTestItem
             // 
-            txtTestItem.Location = new System.Drawing.Point(162, 845);
+            txtTestItem.Location = new System.Drawing.Point(162, 831);
             txtTestItem.Name = "txtTestItem";
-            txtTestItem.Size = new System.Drawing.Size(225, 28);
+            txtTestItem.Size = new System.Drawing.Size(625, 28);
             txtTestItem.TabIndex = 44;
             // 
             // txtEngineer
             // 
-            txtEngineer.Location = new System.Drawing.Point(562, 684);
+            txtEngineer.Location = new System.Drawing.Point(562, 687);
             txtEngineer.Name = "txtEngineer";
             txtEngineer.Size = new System.Drawing.Size(225, 28);
             txtEngineer.TabIndex = 46;
             // 
             // txtSampleNo
             // 
-            txtSampleNo.Location = new System.Drawing.Point(562, 737);
+            txtSampleNo.Location = new System.Drawing.Point(562, 735);
             txtSampleNo.Name = "txtSampleNo";
             txtSampleNo.Size = new System.Drawing.Size(225, 28);
             txtSampleNo.TabIndex = 47;
             // 
             // labelControl24
             // 
-            labelControl24.Location = new System.Drawing.Point(425, 413);
+            labelControl24.Location = new System.Drawing.Point(425, 410);
             labelControl24.Name = "labelControl24";
             labelControl24.Size = new System.Drawing.Size(105, 22);
             labelControl24.TabIndex = 48;
@@ -475,14 +475,14 @@
             // 
             // memoTestInformation
             // 
-            memoTestInformation.Location = new System.Drawing.Point(162, 274);
+            memoTestInformation.Location = new System.Drawing.Point(162, 266);
             memoTestInformation.Name = "memoTestInformation";
             memoTestInformation.Size = new System.Drawing.Size(625, 100);
             memoTestInformation.TabIndex = 49;
             // 
             // memoNote
             // 
-            memoNote.Location = new System.Drawing.Point(44, 933);
+            memoNote.Location = new System.Drawing.Point(44, 910);
             memoNote.Name = "memoNote";
             memoNote.Size = new System.Drawing.Size(743, 88);
             memoNote.TabIndex = 50;
@@ -497,14 +497,14 @@
             // 
             // txtCreatedBy
             // 
-            txtCreatedBy.Location = new System.Drawing.Point(562, 101);
+            txtCreatedBy.Location = new System.Drawing.Point(562, 104);
             txtCreatedBy.Name = "txtCreatedBy";
             txtCreatedBy.Size = new System.Drawing.Size(225, 28);
             txtCreatedBy.TabIndex = 52;
             // 
             // btnCreatedRentTime
             // 
-            btnCreatedRentTime.Location = new System.Drawing.Point(44, 1043);
+            btnCreatedRentTime.Location = new System.Drawing.Point(44, 1020);
             btnCreatedRentTime.Name = "btnCreatedRentTime";
             btnCreatedRentTime.Size = new System.Drawing.Size(168, 51);
             btnCreatedRentTime.TabIndex = 53;
@@ -513,7 +513,7 @@
             // 
             // chkHasLunch
             // 
-            chkHasLunch.Location = new System.Drawing.Point(607, 526);
+            chkHasLunch.Location = new System.Drawing.Point(607, 525);
             chkHasLunch.Name = "chkHasLunch";
             chkHasLunch.Properties.Caption = "午餐";
             chkHasLunch.Size = new System.Drawing.Size(67, 27);
@@ -522,7 +522,7 @@
             // 
             // chkHasDinner
             // 
-            chkHasDinner.Location = new System.Drawing.Point(607, 571);
+            chkHasDinner.Location = new System.Drawing.Point(607, 570);
             chkHasDinner.Name = "chkHasDinner";
             chkHasDinner.Properties.Caption = "晚餐";
             chkHasDinner.Size = new System.Drawing.Size(67, 27);
@@ -534,7 +534,7 @@
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new System.Drawing.Size(830, 1106);
+            ClientSize = new System.Drawing.Size(830, 1091);
             Controls.Add(chkHasDinner);
             Controls.Add(chkHasLunch);
             Controls.Add(btnCreatedRentTime);

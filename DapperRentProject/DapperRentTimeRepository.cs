@@ -132,7 +132,7 @@ namespace RentProject.Repository
             connection.Open();
 
             var sql = @"SELECT
-                        BookingNo, Area, Location, CustomerName, PE, 
+                        RentTimeId,BookingNo, Area, Location, CustomerName, PE, 
                         StartDate, EndDate,ProjectNo,ProjectName
                         FROM dbo.RentTimes
                         WHERE IsDeleted = 0
