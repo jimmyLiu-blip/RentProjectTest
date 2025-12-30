@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RentProject.Service;
+using RentProject.Shared.UIModels;
 
 
 namespace RentProject
@@ -82,6 +83,19 @@ namespace RentProject
             gridView1.Columns["Action"].VisibleIndex = 9;
 
             gridView1.BestFitColumns(); //自動調整每個欄位寬度，讓內容比較不會被截掉
+        }
+
+        // 條件篩選
+        public void ApplyFilter(RentTimeFilter filter, List<RentTime> all)
+        {
+            var list = all;
+
+            var location = filter.Location?.Trim();
+
+            if(!string.IsNullOrWhiteSpace(location) && location != "全部")
+                list = all.Where(x => x.Location == location).ToList();
+
+            LoadData(list);
         }
 
         private void ApplyProjectViewColumnSetting()

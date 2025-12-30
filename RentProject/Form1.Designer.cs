@@ -42,9 +42,16 @@
             barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             mainPanel = new DevExpress.XtraEditors.PanelControl();
+            filterPanel = new DevExpress.XtraEditors.PanelControl();
+            labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            cmbLocationFilter = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)ribbonControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)barManager1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)mainPanel).BeginInit();
+            mainPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)filterPanel).BeginInit();
+            filterPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)cmbLocationFilter.Properties).BeginInit();
             SuspendLayout();
             // 
             // ribbonPage1
@@ -152,11 +159,41 @@
             // 
             // mainPanel
             // 
+            mainPanel.Controls.Add(filterPanel);
             mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             mainPanel.Location = new System.Drawing.Point(0, 237);
             mainPanel.Name = "mainPanel";
             mainPanel.Size = new System.Drawing.Size(1859, 747);
             mainPanel.TabIndex = 5;
+            // 
+            // filterPanel
+            // 
+            filterPanel.Controls.Add(cmbLocationFilter);
+            filterPanel.Controls.Add(labelControl1);
+            filterPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            filterPanel.Location = new System.Drawing.Point(2, 2);
+            filterPanel.Name = "filterPanel";
+            filterPanel.Size = new System.Drawing.Size(1855, 79);
+            filterPanel.TabIndex = 11;
+            // 
+            // labelControl1
+            // 
+            labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            labelControl1.Appearance.Options.UseFont = true;
+            labelControl1.Location = new System.Drawing.Point(76, 23);
+            labelControl1.Name = "labelControl1";
+            labelControl1.Size = new System.Drawing.Size(58, 34);
+            labelControl1.TabIndex = 0;
+            labelControl1.Text = "場地";
+            // 
+            // cmbLocationFilter
+            // 
+            cmbLocationFilter.Location = new System.Drawing.Point(168, 30);
+            cmbLocationFilter.MenuManager = ribbonControl1;
+            cmbLocationFilter.Name = "cmbLocationFilter";
+            cmbLocationFilter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cmbLocationFilter.Size = new System.Drawing.Size(225, 28);
+            cmbLocationFilter.TabIndex = 1;
             // 
             // Form1
             // 
@@ -178,6 +215,11 @@
             ((System.ComponentModel.ISupportInitialize)ribbonControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)barManager1).EndInit();
             ((System.ComponentModel.ISupportInitialize)mainPanel).EndInit();
+            mainPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)filterPanel).EndInit();
+            filterPanel.ResumeLayout(false);
+            filterPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)cmbLocationFilter.Properties).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -197,6 +239,9 @@
         private DevExpress.XtraBars.BarButtonItem btnTestConnection;
         private DevExpress.XtraEditors.PanelControl mainPanel;
         private DevExpress.XtraBars.BarButtonItem btnView;
+        private DevExpress.XtraEditors.PanelControl filterPanel;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbLocationFilter;
+        private DevExpress.XtraEditors.LabelControl labelControl1;
     }
 }
 
