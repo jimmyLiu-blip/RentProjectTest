@@ -11,8 +11,8 @@ namespace RentProject
     {
         private readonly DapperRentTimeRepository _rentTimeRepo;
         private readonly RentTimeService _rentTimeservice;
-        private readonly ProjectService _projectService;
         private readonly DapperProjectRepository _projectRepo;
+        private readonly ProjectService _projectService;
 
         private ProjectViewControl _projectView;
         private CalendarViewControl _calendarView;
@@ -34,7 +34,10 @@ namespace RentProject
             _projectRepo = new DapperProjectRepository(connectionString);
             _projectService = new ProjectService(_projectRepo);
 
-            _projectView = new ProjectViewControl(_rentTimeservice) { Dock = DockStyle.Fill };
+            _projectView = new ProjectViewControl(_rentTimeservice, _projectService) { Dock = DockStyle.Fill };
+
+            _projectView.RentTimeSaved += RefreshProjectView; //ProjectViewControl 說「存好了」→ Form1 刷新列表
+
             _calendarView = new CalendarViewControl { Dock = DockStyle.Fill };
         }
 
@@ -51,7 +54,13 @@ namespace RentProject
         {
             var form = new Project(_rentTimeservice, _projectService);
 
-            form.ShowDialog();
+            var dr = form.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                RefreshProjectView();
+                ShowProjectView();
+            }
         }
 
         private void btnTestConnection_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

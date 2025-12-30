@@ -16,16 +16,20 @@ namespace RentProject
     public partial class ProjectViewControl : XtraUserControl
     {
         private readonly RentTimeService _rentTimeService;
+        private readonly ProjectService _projectService;
 
-        public ProjectViewControl()
+        public ProjectViewControl()  //無參數建構子，讓Designer可以正常建立這個UserControl
         {
             InitializeComponent();
         }
 
-        public ProjectViewControl(RentTimeService rentTimeService):this()
+        public ProjectViewControl(RentTimeService rentTimeService, ProjectService projectService):this() //有參數建構子，注入Service，this()的意思是先跑初始化設定，把畫面元件都建立好後，才把下面那兩行Service填進去
         {
             _rentTimeService = rentTimeService 
                 ?? throw new ArgumentNullException(nameof(rentTimeService));
+
+            _projectService = projectService 
+                ?? throw new ArgumentNullException(nameof(projectService));
         }
 
         public void LoadData(List<RentTime> list)
@@ -103,14 +107,21 @@ namespace RentProject
             gridView1.Columns["ProjectName"].VisibleIndex = 8;
         }
 
+        public event Action? RentTimeSaved;
+
         private void ActionButton_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             var row = gridView1.GetRow(gridView1.FocusedRowHandle) as RentTime; // FocusedRowHandle：目前選到的那一列
             if (row == null) return;                                // GetRow(handle)：把那一列的資料物件取出來（就是 RentTime）
 
-            var data = _rentTimeService.GetRentTimeById(row.RentTimeId);
+            var form = new Project(_rentTimeService, _projectService, row.RentTimeId);
 
-            XtraMessageBox.Show($"DB查回:{data.BookingNo}\nCreatedBy={data.CreatedBy}", "GetById OK");
+            var dr = form.ShowDialog();
+
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                RentTimeSaved?.Invoke(); // 通知外面刷新
+            }
         }
 
         private void gridControl1_Click(object sender, EventArgs e)

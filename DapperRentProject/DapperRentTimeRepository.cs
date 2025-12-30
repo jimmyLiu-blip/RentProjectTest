@@ -196,10 +196,33 @@ namespace RentProject.Repository
                         SampleNo = @SampleNo,
                         TestMode = @TestMode,
                         TestItem = @TestItem,
-                        Notes = @Notes
+                        Notes = @Notes,
+                        EstimatedMinutes = @EstimatedMinutes,
+                        EstimatedHours = @EstimatedHours,
+                        ModifiedBy = @ModifiedBy,
+                        ModifiedDate = @ModifiedDate
                         WHERE RentTimeId = @RentTimeId;";
 
             return connection.Execute(sql, model);
+        }
+
+        public int DeletedRentTime(int rentTimeId, string createdBy, DateTime modifiedDate)
+        {
+            using var connection = new SqlConnection(_connectionString);
+
+            connection.Open();
+
+            var sql = @"UPDATE dbo.RentTimes
+                        SET IsDeleted = 1,
+                            ModifiedBy = @ModifiedBy,
+                            ModifiedDate = @ModifiedDate
+                        WHERE RentTimeId = @RentTimeId;";
+
+            return connection.Execute(sql, new { 
+                RentTimeId = rentTimeId ,
+                ModifiedBy = createdBy,
+                ModifiedDate = modifiedDate
+            });
         }
     }
 }

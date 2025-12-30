@@ -79,6 +79,7 @@
             btnCreatedRentTime = new DevExpress.XtraEditors.SimpleButton();
             chkHasLunch = new DevExpress.XtraEditors.CheckEdit();
             chkHasDinner = new DevExpress.XtraEditors.CheckEdit();
+            btnDeletedRentTime = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)cmbProjectNo.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cmbLocation.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)startDateEdit.Properties).BeginInit();
@@ -529,12 +530,22 @@
             chkHasDinner.TabIndex = 55;
             chkHasDinner.CheckedChanged += chkHasDinner_CheckedChanged;
             // 
+            // btnDeletedRentTime
+            // 
+            btnDeletedRentTime.Location = new System.Drawing.Point(607, 1020);
+            btnDeletedRentTime.Name = "btnDeletedRentTime";
+            btnDeletedRentTime.Size = new System.Drawing.Size(168, 51);
+            btnDeletedRentTime.TabIndex = 56;
+            btnDeletedRentTime.Text = "刪除租時";
+            btnDeletedRentTime.Click += btnDeletedRentTime_Click;
+            // 
             // Project
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             AutoSize = true;
             ClientSize = new System.Drawing.Size(830, 1091);
+            Controls.Add(btnDeletedRentTime);
             Controls.Add(chkHasDinner);
             Controls.Add(chkHasLunch);
             Controls.Add(btnCreatedRentTime);
@@ -678,5 +689,6 @@
         private DevExpress.XtraEditors.SimpleButton btnCreatedRentTime;
         private DevExpress.XtraEditors.CheckEdit chkHasLunch;
         private DevExpress.XtraEditors.CheckEdit chkHasDinner;
+        private DevExpress.XtraEditors.SimpleButton btnDeletedRentTime;
     }
 }

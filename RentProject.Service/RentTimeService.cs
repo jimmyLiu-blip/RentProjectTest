@@ -44,10 +44,27 @@ namespace RentProject.Service
         public void UpdateRentTimeById(RentTime model)
         {
             if (model.RentTimeId <= 0) throw new Exception("RentTimeId 不正確");
+
+            // Update 前也要做：必填驗證 + 預估重算
+            ValidateRequired(model);
+            CalculateEstimated(model);
+
+            model.ModifiedBy = model.CreatedBy;
+            model.ModifiedDate = DateTime.Now;
+
             var rows = _repo.UpdateRentTime(model);
-            if (rows != 1) throw new Exception($"更新失敗，受影響比數={rows}");
+            if (rows != 1) throw new Exception($"更新失敗，受影響筆數={rows}");
         }
 
+        // 刪除租時單
+        public void DeletedRentTime(int rentTimeId, string createdBy, DateTime modifiedDate)
+        {
+            if (rentTimeId <= 0) throw new Exception("RentTimeId 不正確");
+
+            var rows = _repo.DeletedRentTime(rentTimeId, createdBy,DateTime.Now);
+
+            if (rows != 1) throw new Exception($"刪除失敗，受影響筆數={rows}");
+        }
 
         private static void ValidateRequired(RentTime model)
         {
@@ -83,5 +100,7 @@ namespace RentProject.Service
             model.EstimatedMinutes = minutes;
             model.EstimatedHours = Math.Round(minutes/60m, 2);
         }
+
+
     }
 }

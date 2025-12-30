@@ -34,6 +34,7 @@
             ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             btnAddRentTime = new DevExpress.XtraBars.BarButtonItem();
             btnTestConnection = new DevExpress.XtraBars.BarButtonItem();
+            btnView = new DevExpress.XtraBars.BarButtonItem();
             ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             barManager1 = new DevExpress.XtraBars.BarManager(components);
             barDockControlTop = new DevExpress.XtraBars.BarDockControl();
@@ -41,7 +42,6 @@
             barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             mainPanel = new DevExpress.XtraEditors.PanelControl();
-            btnView = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)ribbonControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)barManager1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)mainPanel).BeginInit();
@@ -79,6 +79,15 @@
             btnTestConnection.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("btnTestConnection.ImageOptions.LargeImage");
             btnTestConnection.Name = "btnTestConnection";
             btnTestConnection.ItemClick += btnTestConnection_ItemClick;
+            // 
+            // btnView
+            // 
+            btnView.Caption = "切換檢視模式";
+            btnView.Id = 3;
+            btnView.ImageOptions.Image = (System.Drawing.Image)resources.GetObject("btnView.ImageOptions.Image");
+            btnView.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("btnView.ImageOptions.LargeImage");
+            btnView.Name = "btnView";
+            btnView.ItemClick += btnView_ItemClick;
             // 
             // ribbonControl1
             // 
@@ -148,15 +157,6 @@
             mainPanel.Name = "mainPanel";
             mainPanel.Size = new System.Drawing.Size(1859, 747);
             mainPanel.TabIndex = 5;
-            // 
-            // btnView
-            // 
-            btnView.Caption = "切換檢視模式";
-            btnView.Id = 3;
-            btnView.ImageOptions.Image = (System.Drawing.Image)resources.GetObject("btnView.ImageOptions.Image");
-            btnView.ImageOptions.LargeImage = (System.Drawing.Image)resources.GetObject("btnView.ImageOptions.LargeImage");
-            btnView.Name = "btnView";
-            btnView.ItemClick += btnView_ItemClick;
             // 
             // Form1
             // 
