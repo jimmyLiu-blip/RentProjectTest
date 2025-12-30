@@ -1,13 +1,6 @@
-﻿using DevExpress.XtraEditors;
+﻿using RentProject.Shared.UIModels;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace RentProject
 {
@@ -35,7 +28,27 @@ namespace RentProject
 
             schedulerControl1.Start = _currentMonth;
 
+            // 綁 DataStorage（很重要）
+            schedulerControl1.DataStorage = schedulerDataStorage1;
+
+            // 設定 Appointment 欄位對應 (Mapping)
+            schedulerDataStorage1.Appointments.Mappings.AppointmentId =
+                nameof(CalendarRentTimeItem.RentTimeId);
+            schedulerDataStorage1.Appointments.Mappings.Start =
+                nameof(CalendarRentTimeItem.StartAt);
+            schedulerDataStorage1.Appointments.Mappings.End =
+                nameof(CalendarRentTimeItem.EndAt);
+            schedulerDataStorage1.Appointments.Mappings.Subject = 
+                nameof(CalendarRentTimeItem.Subject);
+
+            schedulerDataStorage1.Appointments.CustomFieldMappings.Clear();
+            schedulerDataStorage1.Appointments.CustomFieldMappings.Add(
+                new DevExpress.XtraScheduler.AppointmentCustomFieldMapping("Location", nameof(CalendarRentTimeItem.Location))
+            );
+
             UpdateMonthTitle();
+
+            LoadDemoAppointments();
         }
 
         private void btnPrevMonth_Click(object sender, EventArgs e)
@@ -56,5 +69,34 @@ namespace RentProject
         {
             lblMonthTitle.Text = $"{_currentMonth.Year}年{_currentMonth.Month}月";
         }
+
+        private void LoadDemoAppointments()
+        {
+            var list = new List<CalendarRentTimeItem>
+            {
+                new CalendarRentTimeItem
+                {
+                    RentTimeId = 1,
+                    StartAt = _currentMonth.AddDays(2).AddHours(10),  // 當月第3天 10:00
+                    EndAt   = _currentMonth.AddDays(2).AddHours(15),  // 當月第3天 15:00
+                    Subject = "TE251130001 | 好厲害科技 | Conducted 2",
+                    Location = "SAC D"
+                },
+                new CalendarRentTimeItem
+                {
+                    RentTimeId = 2,
+                    StartAt = _currentMonth.AddDays(9).AddHours(9),
+                    EndAt   = _currentMonth.AddDays(9).AddHours(12),
+                    Subject = "TE251125001 | 好厲害科技 | Conducted 1",
+                    Location = "Conducted 1"
+                }
+            };
+
+            schedulerDataStorage1.Appointments.DataSource = list;
+
+            // 保險：強制刷新一次畫面
+            schedulerControl1.Refresh();
+        }
+
     }
 }
