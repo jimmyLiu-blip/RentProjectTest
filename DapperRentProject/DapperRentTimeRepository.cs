@@ -1,6 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using RentProject.Domain;
-using Dapper;
+using RentProject.Shared.DTO;
 
 
 namespace RentProject.Repository
@@ -14,7 +15,7 @@ namespace RentProject.Repository
             _connectionString = connectionString;
         }
 
-        // 連線測試
+        // 連線測試(OK)
         public string TestConnection()
         {
             try
@@ -47,62 +48,82 @@ namespace RentProject.Repository
             try
             {
                 var insertSql = @"
-                INSERT INTO dbo.RentTimes
+                INSERT INTO dbo.RentTime
                 (
-                    BookingNo,CreatedBy, Area, CustomerName, Sales, ProjectNo, ProjectName, PE, Location,
-                    ContactName, Phone, TestInformation, EngineerName, SampleModel, SampleNo,
-                    TestMode, TestItem, Notes, 
-                    StartDate, EndDate, StartTime, EndTime, EstimatedMinutes, EstimatedHours,
-                    HasLunch, LunchMinutes, HasDinner, DinnerMinutes
+                    BookingNo,
+                    ProjectId,
+                    TestLocationId, 
+                    AssignedUserId, 
+                    TestModeId, 
+                    CreatedByUserId, 
+
+                    TestInformation,
+                    Notes,
+                    ActualStartAt,
+                    ActualEndAt,
+
+                    HasLunch,
+                    LunchMinutes,
+                    HasDinner,
+                    DinnerMinutes,
+
+                    Status,
+                    DeletedAt
                 )
                 OUTPUT INSERTED.RentTimeId
                 VALUES
                 (
-                    NULL, @CreatedBy, @Area, @CustomerName, @Sales, @ProjectNo, @ProjectName, @PE, @Location,
-                    @ContactName, @Phone, @TestInformation, @EngineerName, @SampleModel, @SampleNo,
-                    @TestMode, @TestItem, @Notes, 
-                    @StartDate, @EndDate, @StartTime, @EndTime, @EstimatedMinutes, @EstimatedHours,
-                    @HasLunch, @LunchMinutes, @HasDinner, @DinnerMinutes
+                    @TempBookingNo,
+                    @ProjectId,
+                    @TestLocationId,
+                    @AssignedUserId,
+                    @TestModeId,
+                    @CreatedByUserId,
+
+                    @TestInformation,
+                    @Notes,
+                    @ActualStartAt,
+                    @ActualEndAt,
+
+                    @HasLunch,
+                    @LunchMinutes,
+                    @HasDinner,
+                    @DinnerMinutes,
+
+                    @Status,
+                    NULL
                 );";
 
                 int rentTimeId = connection.ExecuteScalar<int>(insertSql, new
                 {
-                    model.CreatedBy,
-                    model.Area,
-                    model.CustomerName,
-                    model.Sales,
-                    model.ProjectNo,
-                    model.ProjectName,
-                    model.PE,
-                    model.Location,
+                    TempBookingNo = "TMP",
 
-                    model.ContactName,
-                    model.Phone,
+                    ProjectId = 2,
+                    TestLocationId = 2,
+                    AssignedUserId = 2,
+                    TestModeId = 2,
+                    CreatedByUserId = 2,
+
                     model.TestInformation,
-                    model.EngineerName,
-                    model.SampleModel,
-                    model.SampleNo,
-                    model.TestMode,
-                    model.TestItem,
                     model.Notes,
-
-                    model.StartDate,
-                    model.EndDate,
-                    model.StartTime,
-                    model.EndTime,
-                    model.EstimatedMinutes,
-                    model.EstimatedHours,
+                    model.ActualStartAt,
+                    model.ActualEndAt,
 
                     model.HasLunch,
                     model.LunchMinutes,
                     model.HasDinner,
-                    model.DinnerMinutes,
+
+                    // DinnerMinutes 在資料庫是 NOT NULL 且沒有 default，所以一定要給值
+                    DinnerMinutes = model.HasDinner ? model.DinnerMinutes : 0,
+
+                    // enum 會以 int 送進去（Draft=0）
+                    Status = (int)model.Status
 
                 }, transaction: tx);
 
                 string bookingNo = $"RF-{rentTimeId:D8}";
 
-                var updateSql = @"UPDATE dbo.RentTimes 
+                var updateSql = @"UPDATE dbo.RentTime
                                 SET BookingNo = @BookingNo
                                 WHERE RentTimeId = @RentTimeId;";
 
@@ -128,20 +149,41 @@ namespace RentProject.Repository
         }
 
         // 取得未刪除的所有案件
-        public List<RentTime> GetActiveRentTimesForProjectView()
+        public List<RentTimeListRow> GetActiveRentTimesForProjectView()
         {
             using var connection = new SqlConnection(_connectionString);
 
             connection.Open();
 
-            var sql = @"SELECT
-                        RentTimeId,BookingNo, Area, Location, CustomerName, PE, 
-                        StartDate, EndDate,ProjectNo,ProjectName
-                        FROM dbo.RentTimes
-                        WHERE IsDeleted = 0
-                        ORDER BY CreatedDate DESC;";
+            var sql = @"
+            SELECT
+                rt.RentTimeId,
+                rt.BookingNo, 
 
-            return connection.Query<RentTime>(sql).ToList();
+                -- 新表的 Id（之後下拉選單會用到）
+                rt.ProjectId, 
+                rt.TestLocationId,
+                rt.AssignedUserId,
+                rt.ActualStartAt AS StartTime,
+                rt.ActualEndAt AS EndTime,
+                
+                -- 以下是「ProjectView 要顯示」的欄位：先用 JOIN 查出來
+                p.ProjectNo,
+                p.ProjectName,
+                tl.TestLocationName AS Location,
+                c.CustomerName AS CustomerName,
+                ta.TestAreaName AS Area,
+                pe.ProjectEngineerName AS PE
+                FROM dbo.RentTime rt
+                LEFT JOIN dbo.Project p ON p.ProjectId = rt.ProjectId
+                LEFT JOIN dbo.TestLocation tl ON tl.TestLocationId = rt.TestLocationId
+                LEFT JOIN dbo.Customer c ON c.CustomerId = p.CustomerId
+                LEFT JOIN dbo.TestArea ta ON ta.TestAreaId = tl.TestAreaId
+                LEFT JOIN dbo.ProjectEngineer pe ON pe.ProjectEngineerId = p.ProjectEngineerId
+                WHERE rt.DeletedAt IS NULL
+                ORDER BY CreatedAt DESC;";
+
+            return connection.Query<RentTimeListRow>(sql).ToList();
         }
 
         // 透過案件編號查詢租時單
@@ -151,14 +193,47 @@ namespace RentProject.Repository
 
             connection.Open();
 
-            var sql = @"SELECT 
-                        RentTimeId, BookingNo, Area, CustomerName, Sales, CreatedBy,
-                        ContactName, Phone, TestInformation, ProjectNo, ProjectName,
-                        PE, Location, StartDate, EndDate, StartTime, EndTime, HasLunch,
-                        LunchMinutes, HasDinner, DinnerMinutes, EngineerName, SampleModel,
-                        TestMode, TestItem, Notes
-                        FROM dbo.RentTimes
-                        WHERE RentTimeId = @RentTimeId;";
+            var sql = @"
+            SELECT
+                rt.RentTimeId,
+                rt.BookingNo,
+
+                -- 新表欄位
+                rt.ProjectId,
+                rt.TestLocationId,
+                rt.AssignedUserId,
+                rt.TestModeId,
+                rt.CreatedByUserId,
+                rt.CreatedAt,
+                rt.ModifiedByUserId,
+                rt.ModifiedAt,
+                rt.TestInformation,
+                rt.Notes,
+                rt.ActualStartAt,
+                rt.ActualEndAt,
+                rt.HasLunch,
+                rt.LunchMinutes,
+                rt.HasDinner,
+                rt.DinnerMinutes,
+                rt.Status,
+                rt.DeletedAt,
+
+                -- 下面是舊 UI/舊 Domain 會用到的欄位：用 JOIN 補回來
+                p.ProjectNo,
+                p.ProjectName,
+                tl.TestLocationName AS Location,
+                c.CustomerName,
+                ta.TestAreaName AS Area,
+                pe.ProjectEngineerName AS PE
+
+            FROM dbo.RentTime rt
+            LEFT JOIN dbo.Project p ON p.ProjectId = rt.ProjectId
+            LEFT JOIN dbo.TestLocation tl ON tl.TestLocationId = rt.TestLocationId
+            LEFT JOIN dbo.Customer c ON c.CustomerId = p.CustomerId
+            LEFT JOIN dbo.TestArea ta ON ta.TestAreaId = tl.TestAreaId
+            LEFT JOIN dbo.ProjectEngineer pe ON pe.ProjectEngineerId = p.ProjectEngineerId
+            WHERE rt.RentTimeId = @RentTimeId
+            AND rt.DeletedAt IS NULL;"; 
 
             return connection.QueryFirstOrDefault<RentTime>(sql, new { RentTimeId = rentTimeId });
         }
@@ -170,40 +245,54 @@ namespace RentProject.Repository
 
             connection.Open();
 
-            var sql = @"UPDATE dbo.RentTimes
-                        SET 
-                        Area = @Area,
-                        CustomerName = @CustomerName,
-                        Sales = @Sales,
-                        CreatedBy = @CreatedBy,
-                        ContactName = @ContactName,
-                        Phone = @Phone,
-                        TestInformation = @TestInformation,
-                        ProjectNo = @ProjectNo,
-                        ProjectName = @ProjectName,
-                        PE = @PE,
-                        Location = @Location,
-                        StartDate = @StartDate,
-                        EndDate = @EndDate,
-                        StartTime = @StartTime,
-                        EndTime = @EndTime,
-                        HasLunch = @HasLunch,
-                        LunchMinutes = @LunchMinutes,
-                        HasDinner = @HasDinner,
-                        DinnerMinutes = @DinnerMinutes,
-                        EngineerName = @EngineerName,
-                        SampleModel = @SampleModel,
-                        SampleNo = @SampleNo,
-                        TestMode = @TestMode,
-                        TestItem = @TestItem,
-                        Notes = @Notes,
-                        EstimatedMinutes = @EstimatedMinutes,
-                        EstimatedHours = @EstimatedHours,
-                        ModifiedBy = @ModifiedBy,
-                        ModifiedDate = @ModifiedDate
-                        WHERE RentTimeId = @RentTimeId;";
+            var sql = @"
+            UPDATE dbo.RentTime
+            SET 
+            ProjectId = @ProjectId,
+            TestLocationId = @TestLocationId,
+            AssignedUserId = @AssignedUserId,
+            TestModeId = @TestModeId,
 
-            return connection.Execute(sql, model);
+            TestInformation = @TestInformation,
+            Notes = @Notes,
+            ActualStartAt = @ActualStartAt,
+            ActualEndAt = @ActualEndAt,
+
+            HasLunch = @HasLunch,
+            LunchMinutes = @LunchMinutes,
+            HasDinner = @HasDinner,
+            DinnerMinutes = @DinnerMinutes,
+
+            Status = @Status,
+            ModifiedByUserId = @ModifiedByUserId,
+            ModifiedAt = @ModifiedAt
+
+            WHERE RentTimeId = @RentTimeId
+            AND DeletedAt IS NULL;";
+
+            return connection.Execute(sql, new 
+            {
+                RentTimeId = 1,
+
+                ProjectId = 2,
+                TestLocationId = 2,
+                AssignedUserId = 2,
+                TestModeId = 2,
+
+                model.TestInformation,
+                model.Notes,
+                model.ActualStartAt,
+                model.ActualEndAt,
+
+                model.HasLunch,
+                model.LunchMinutes,
+                model.HasDinner,
+                DinnerMinutes = model.HasDinner ? model.DinnerMinutes : 0,
+
+                Status = (int)model.Status,
+                ModifiedByUserId = model.ModifiedByUserId ?? model.CreatedByUserId,
+                ModifiedAt = DateTime.Now
+            });
         }
 
         public int DeletedRentTime(int rentTimeId, string createdBy, DateTime modifiedDate)

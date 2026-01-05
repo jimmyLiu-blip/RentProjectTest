@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DevExpress.XtraScheduler.TimeRuler timeRuler4 = new DevExpress.XtraScheduler.TimeRuler();
-            DevExpress.XtraScheduler.TimeRuler timeRuler5 = new DevExpress.XtraScheduler.TimeRuler();
-            DevExpress.XtraScheduler.TimeRuler timeRuler6 = new DevExpress.XtraScheduler.TimeRuler();
+            DevExpress.XtraScheduler.TimeRuler timeRuler1 = new DevExpress.XtraScheduler.TimeRuler();
+            DevExpress.XtraScheduler.TimeRuler timeRuler2 = new DevExpress.XtraScheduler.TimeRuler();
+            DevExpress.XtraScheduler.TimeRuler timeRuler3 = new DevExpress.XtraScheduler.TimeRuler();
             lblTitle = new DevExpress.XtraEditors.LabelControl();
             splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
             calendarPanel = new DevExpress.XtraEditors.PanelControl();
@@ -42,6 +42,8 @@
             btnNextMonth = new DevExpress.XtraEditors.SimpleButton();
             btnPrevMonth = new DevExpress.XtraEditors.SimpleButton();
             grpDetail = new DevExpress.XtraEditors.GroupControl();
+            memoDetail = new DevExpress.XtraEditors.MemoEdit();
+            cboRentTime = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainerControl1.Panel1).BeginInit();
             splitContainerControl1.Panel1.SuspendLayout();
@@ -55,6 +57,9 @@
             ((System.ComponentModel.ISupportInitialize)panelControl1).BeginInit();
             panelControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grpDetail).BeginInit();
+            grpDetail.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)memoDetail.Properties).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cboRentTime.Properties).BeginInit();
             SuspendLayout();
             // 
             // lblTitle
@@ -114,11 +119,11 @@
             schedulerControl1.Start = new System.DateTime(2025, 12, 28, 0, 0, 0, 0);
             schedulerControl1.TabIndex = 0;
             schedulerControl1.Text = "schedulerControl1";
-            schedulerControl1.Views.DayView.TimeRulers.Add(timeRuler4);
+            schedulerControl1.Views.DayView.TimeRulers.Add(timeRuler1);
             schedulerControl1.Views.FullWeekView.Enabled = true;
-            schedulerControl1.Views.FullWeekView.TimeRulers.Add(timeRuler5);
+            schedulerControl1.Views.FullWeekView.TimeRulers.Add(timeRuler2);
             schedulerControl1.Views.WeekView.Enabled = false;
-            schedulerControl1.Views.WorkWeekView.TimeRulers.Add(timeRuler6);
+            schedulerControl1.Views.WorkWeekView.TimeRulers.Add(timeRuler3);
             schedulerControl1.Views.YearView.UseOptimizedScrolling = false;
             // 
             // schedulerDataStorage1
@@ -183,12 +188,32 @@
             // 
             // grpDetail
             // 
+            grpDetail.Controls.Add(memoDetail);
+            grpDetail.Controls.Add(cboRentTime);
             grpDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             grpDetail.Location = new System.Drawing.Point(0, 0);
             grpDetail.Name = "grpDetail";
             grpDetail.Size = new System.Drawing.Size(400, 1007);
             grpDetail.TabIndex = 0;
             grpDetail.Text = "詳細資訊";
+            // 
+            // memoDetail
+            // 
+            memoDetail.Dock = System.Windows.Forms.DockStyle.Fill;
+            memoDetail.Location = new System.Drawing.Point(2, 62);
+            memoDetail.Name = "memoDetail";
+            memoDetail.Size = new System.Drawing.Size(396, 943);
+            memoDetail.TabIndex = 1;
+            // 
+            // cboRentTime
+            // 
+            cboRentTime.Dock = System.Windows.Forms.DockStyle.Top;
+            cboRentTime.Location = new System.Drawing.Point(2, 34);
+            cboRentTime.Name = "cboRentTime";
+            cboRentTime.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            cboRentTime.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            cboRentTime.Size = new System.Drawing.Size(396, 28);
+            cboRentTime.TabIndex = 0;
             // 
             // CalendarViewControl
             // 
@@ -213,6 +238,9 @@
             panelControl1.ResumeLayout(false);
             panelControl1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)grpDetail).EndInit();
+            grpDetail.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)memoDetail.Properties).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cboRentTime.Properties).EndInit();
             ResumeLayout(false);
         }
 
@@ -228,5 +256,7 @@
         private DevExpress.XtraEditors.LabelControl lblMonthTitle;
         private DevExpress.XtraEditors.SimpleButton btnNextMonth;
         private DevExpress.XtraEditors.SimpleButton btnPrevMonth;
+        private DevExpress.XtraEditors.MemoEdit memoDetail;
+        private DevExpress.XtraEditors.ComboBoxEdit cboRentTime;
     }
 }

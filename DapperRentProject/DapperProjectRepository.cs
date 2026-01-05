@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
+using RentProject.Shared.DTO;
 using RentProject.UIModels;
 
 namespace RentProject.Repository
@@ -13,18 +14,24 @@ namespace RentProject.Repository
             _connectionString = connectionString;
         }
 
-        public List<ProjectItem> GetActiveProjects()
+        public List<ProjectLookupRow> GetProjectLookup()
         {
             using var connection = new SqlConnection(_connectionString);
 
             connection.Open();
 
-            var selectSql = @"SELECT ProjectNo, ProjectName, JobPM
-                              FROM dbo.Projects
-                              WHERE IsActive = 1
-                              ORDER BY ProjectNo;";
+            var selectSql = @"
+            SELECT 
+                p.ProjectId,
+                p.ProjectNo, 
+                p.ProjectName,
+                pe.ProjectEngineerName
+            FROM dbo.Project p
+            LEFT JOIN ProjectEngineer pe ON pe.ProjectEngineerId = p.ProjectEngineerId
+            WHERE p.DeletedAt IS NULL
+            ORDER BY p.ProjectNo;";
 
-            return connection.Query<ProjectItem>(selectSql).ToList();
+            return connection.Query<ProjectLookupRow>(selectSql).ToList();
         }
     }
 }

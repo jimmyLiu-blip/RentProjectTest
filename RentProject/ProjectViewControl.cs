@@ -5,11 +5,12 @@ using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Base;
 using RentProject.Domain;
+using RentProject.Service;
+using RentProject.Shared.DTO;
+using RentProject.Shared.UIModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RentProject.Service;
-using RentProject.Shared.UIModels;
 
 
 namespace RentProject
@@ -24,6 +25,7 @@ namespace RentProject
             InitializeComponent();
         }
 
+
         public ProjectViewControl(RentTimeService rentTimeService, ProjectService projectService):this() //有參數建構子，注入Service，this()的意思是先跑初始化設定，把畫面元件都建立好後，才把下面那兩行Service填進去
         {
             _rentTimeService = rentTimeService 
@@ -33,7 +35,7 @@ namespace RentProject
                 ?? throw new ArgumentNullException(nameof(projectService));
         }
 
-        public void LoadData(List<RentTime> list)
+        public void LoadData(List<RentTimeListRow> list)
         {
             gridControl1.DataSource = list; // 表格中的資料來源為參數List
             gridView1.PopulateColumns();  // 自動產生欄位
@@ -48,7 +50,7 @@ namespace RentProject
             var show = new[]
             {
                 "BookingNo", "Area", "Location", "CustomerName", "PE",
-                "StartDate", "EndDate", "ProjectNo", "ProjectName","Action"
+                "StartTime", "EndTime", "ProjectNo", "ProjectName","Action"
             };
 
             foreach (GridColumn col in gridView1.Columns)  //只顯示 show 裡列的欄位，其它全部隱藏。
@@ -86,7 +88,7 @@ namespace RentProject
         }
 
         // 條件篩選
-        public void ApplyFilter(RentTimeFilter filter, List<RentTime> all)
+        public void ApplyFilter(RentTimeFilter filter, List<RentTimeListRow> all)
         {
             var list = all;
 
@@ -105,8 +107,8 @@ namespace RentProject
             gridView1.Columns["Location"].Caption = "場地";
             gridView1.Columns["CustomerName"].Caption = "客戶名稱";
             gridView1.Columns["PE"].Caption = "PE";
-            gridView1.Columns["StartDate"].Caption = "開始日期";
-            gridView1.Columns["EndDate"].Caption = "結束日期";
+            gridView1.Columns["StartTime"].Caption = "開始日期";
+            gridView1.Columns["EndTime"].Caption = "結束日期";
             gridView1.Columns["ProjectNo"].Caption = "Project No.";
             gridView1.Columns["ProjectName"].Caption = "Project Name";
 
@@ -115,8 +117,8 @@ namespace RentProject
             gridView1.Columns["Location"].VisibleIndex = 2;
             gridView1.Columns["CustomerName"].VisibleIndex = 3;
             gridView1.Columns["PE"].VisibleIndex = 4;
-            gridView1.Columns["StartDate"].VisibleIndex = 5;
-            gridView1.Columns["EndDate"].VisibleIndex = 6;
+            gridView1.Columns["StartTime"].VisibleIndex = 5;
+            gridView1.Columns["EndTime"].VisibleIndex = 6;
             gridView1.Columns["ProjectNo"].VisibleIndex = 7;
             gridView1.Columns["ProjectName"].VisibleIndex = 8;
         }
@@ -125,7 +127,7 @@ namespace RentProject
 
         private void ActionButton_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
-            var row = gridView1.GetRow(gridView1.FocusedRowHandle) as RentTime; // FocusedRowHandle：目前選到的那一列
+            var row = gridView1.GetRow(gridView1.FocusedRowHandle) as RentTimeListRow; // FocusedRowHandle：目前選到的那一列
             if (row == null) return;                                // GetRow(handle)：把那一列的資料物件取出來（就是 RentTime）
 
             var form = new Project(_rentTimeService, _projectService, row.RentTimeId);

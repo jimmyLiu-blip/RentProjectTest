@@ -2,6 +2,7 @@
 using RentProject.Domain;
 using RentProject.Repository;
 using RentProject.Service;
+using RentProject.Shared.DTO;
 using RentProject.UIModels;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace RentProject
         private readonly RentTimeService _rentTimeService;
         private readonly ProjectService _projectService;
 
-        private List<ProjectItem> _projects = new();
+        private List<ProjectLookupRow> _projects = new();
 
         private static readonly TimeSpan LunchEnableAt = new(13, 0, 0);
         private static readonly TimeSpan DinnerEnableAt = new(18, 0, 0);
@@ -74,7 +75,7 @@ namespace RentProject
         // =========================
         private void Project_Load(object sender, EventArgs e)
         {
-            _projects = _projectService.GetActiveProjects();
+            _projects = _projectService.GetProjectLookup();
 
             cmbProjectNo.Properties.Items.Clear();
             cmbProjectNo.Properties.Items.AddRange(_projects.Select(p => p.ProjectNo).ToArray());
@@ -223,7 +224,7 @@ namespace RentProject
             var p = _projects.FirstOrDefault(x => x.ProjectNo == projectNo);
 
             txtProjectName.Text = p?.ProjectName ?? "";
-            txtPE.Text = p?.JobPM ?? "";
+            txtPE.Text = p?.ProjectEngineer ?? "";
         }
 
         // =========================

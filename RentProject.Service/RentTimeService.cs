@@ -1,5 +1,6 @@
 ﻿using RentProject.Domain;
 using RentProject.Repository;
+using RentProject.Shared.DTO;
 
 namespace RentProject.Service
 {
@@ -22,7 +23,7 @@ namespace RentProject.Service
         }
 
         // 取得案件清單
-        public List<RentTime> GetProjectViewList()
+        public List<RentTimeListRow> GetProjectViewList()
         {
             return _repo.GetActiveRentTimesForProjectView();
         }
@@ -66,14 +67,25 @@ namespace RentProject.Service
             if (rows != 1) throw new Exception($"刪除失敗，受影響筆數={rows}");
         }
 
+
         private static void ValidateRequired(RentTime model)
-        {
-            if (string.IsNullOrWhiteSpace(model.Area)) throw new Exception("Area 必填");
-            if (string.IsNullOrWhiteSpace(model.CreatedBy)) throw new Exception("CreatedBy 必填");
-            if (string.IsNullOrWhiteSpace(model.ProjectName)) throw new Exception("ProjectName 必填");
-            if (string.IsNullOrWhiteSpace(model.PE)) throw new Exception("PE 必填");
-            if (string.IsNullOrWhiteSpace(model.ProjectNo)) throw new Exception("ProjectNo 必填");
-            if (string.IsNullOrWhiteSpace(model.Location)) throw new Exception("Location 必填");
+        {   
+            /*
+            if (model.ProjectId <= 0) throw new Exception("ProjectId 必填");
+            if (model.TestLocationId <= 0) throw new Exception("TestLocationId 必填");
+            if (model.AssignedUserId <= 0) throw new Exception("AssignedUserId 必填");
+            if (model.TestModeId <= 0) throw new Exception("TestModeId 必填");
+            if (model.CreatedByUserId <= 0) throw new Exception("CreatedByUserId 必填");
+            */
+
+            if (!model.HasDinner)
+            {
+                model.DinnerMinutes = 0;
+            }
+            else
+            { 
+                if (model.DinnerMinutes <= 0) throw new Exception("HasDinner 勾選時，DinnerMinutes 必填且需 > 0");
+            }
         }
 
         private static void CalculateEstimated(RentTime model)

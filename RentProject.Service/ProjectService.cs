@@ -1,4 +1,5 @@
 ﻿using RentProject.Repository;
+using RentProject.Shared.DTO;
 using RentProject.UIModels;
 
 namespace RentProject.Service
@@ -12,9 +13,9 @@ namespace RentProject.Service
             _projectRepo = projectRepo;
         }
 
-        public List<ProjectItem> GetActiveProjects()
+        public List<ProjectLookupRow> GetProjectLookup()
         { 
-            return _projectRepo.GetActiveProjects();
+            return _projectRepo.GetProjectLookup();
         }
     }
 }
