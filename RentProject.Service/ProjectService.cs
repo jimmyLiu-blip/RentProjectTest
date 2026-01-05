@@ -1,6 +1,5 @@
 ﻿using RentProject.Repository;
 using RentProject.Shared.DTO;
-using RentProject.UIModels;
 
 namespace RentProject.Service
 {

@@ -272,12 +272,12 @@ namespace RentProject.Repository
 
             return connection.Execute(sql, new 
             {
-                RentTimeId = 1,
+                model.RentTimeId,
 
-                ProjectId = 2,
-                TestLocationId = 2,
-                AssignedUserId = 2,
-                TestModeId = 2,
+                model.ProjectId,
+                model.TestLocationId,
+                model.AssignedUserId,
+                model.TestModeId ,
 
                 model.TestInformation,
                 model.Notes,
@@ -307,7 +307,8 @@ namespace RentProject.Repository
                             ModifiedDate = @ModifiedDate
                         WHERE RentTimeId = @RentTimeId;";
 
-            return connection.Execute(sql, new { 
+            return connection.Execute(sql, new 
+            { 
                 RentTimeId = rentTimeId ,
                 ModifiedBy = createdBy,
                 ModifiedDate = modifiedDate

@@ -8,6 +8,6 @@
 
         public string ProjectName { get; set; } = "";
 
-        public string ProjectEngineer { get; set; } = "";
+        public string ProjectEngineerName { get; set; } = "";
     }
 }

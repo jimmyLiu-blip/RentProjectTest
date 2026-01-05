@@ -1,13 +1,11 @@
 ﻿using DevExpress.XtraEditors;
 using RentProject.Domain;
-using RentProject.Repository;
 using RentProject.Service;
 using RentProject.Shared.DTO;
 using RentProject.UIModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Forms;
 
 
@@ -20,8 +18,13 @@ namespace RentProject
         // =========================
         private readonly RentTimeService _rentTimeService;
         private readonly ProjectService _projectService;
+        private readonly TestLocationService _testLocationService;
 
         private List<ProjectLookupRow> _projects = new();
+        private List<TestLocationLookupRow> _testLocations = new();
+
+        private int? _selectedProjectId;
+        private int? _selectedTestLocationId;
 
         private static readonly TimeSpan LunchEnableAt = new(13, 0, 0);
         private static readonly TimeSpan DinnerEnableAt = new(18, 0, 0);
@@ -58,14 +61,15 @@ namespace RentProject
         // =========================
         // 2) 建構子
         // =========================
-        public Project(RentTimeService rentTimeService, ProjectService projectService)
+        public Project(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService)
         {
             InitializeComponent();
             _rentTimeService = rentTimeService;
             _projectService = projectService;
+            _testLocationService = testLocationService;
         }
 
-        public Project(RentTimeService rentTimeService, ProjectService projectService, int rentTimeId) : this(rentTimeService, projectService)
+        public Project(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService, int rentTimeId) : this(rentTimeService, projectService, testLocationService)
         {
             _editRentTimeId = rentTimeId;
         }
@@ -76,9 +80,13 @@ namespace RentProject
         private void Project_Load(object sender, EventArgs e)
         {
             _projects = _projectService.GetProjectLookup();
+            _testLocations = _testLocationService.GetTestLocationLookup();
 
             cmbProjectNo.Properties.Items.Clear();
             cmbProjectNo.Properties.Items.AddRange(_projects.Select(p => p.ProjectNo).ToArray());
+
+            cmbLocation.Properties.Items.Clear();
+            cmbLocation.Properties.Items.AddRange(_testLocations.Select(p => p.TestLocationName).ToArray());
 
             startDateEdit.EditValue = null;
             endDateEdit.EditValue = null;
@@ -127,6 +135,12 @@ namespace RentProject
 
                     return;
                 }
+
+                if (_selectedProjectId == null || _selectedProjectId <= 0)
+                    throw new Exception("ProjectNo 無法對應到 ProjectId，請重新選擇 Project No");
+
+                if (_selectedTestLocationId == null || _selectedTestLocationId <= 0)
+                    throw new Exception("TestLocationId 尚未綁定（下一步會改用資料庫 Location Lookup）");
 
                 // 編輯模式：走 Update（最重要：要把 RentTimeId 帶回 model）
                 model.RentTimeId = _editRentTimeId.Value;
@@ -213,9 +227,11 @@ namespace RentProject
         // 5-4 Location / ProjectNo 連動填值
         private void cmbLocation_EditValueChanged(object sender, EventArgs e)
         {
-            var location = cmbLocation.Text?.Trim() ?? "";
-            var item = _locations.FirstOrDefault(x => x.Location == location);
-            txtArea.Text = item?.Area ?? "";
+            var locationName = cmbLocation.Text?.Trim() ?? "";
+            var loc = _testLocations.FirstOrDefault(x => x.TestLocationName == locationName);
+
+            txtArea.Text = loc?.TestAreaName ?? "";
+            _selectedTestLocationId = loc?.TestLocationId;
         }
 
         private void cmbProjectNo_EditValueChanged(object sender, EventArgs e)
@@ -224,7 +240,9 @@ namespace RentProject
             var p = _projects.FirstOrDefault(x => x.ProjectNo == projectNo);
 
             txtProjectName.Text = p?.ProjectName ?? "";
-            txtPE.Text = p?.ProjectEngineer ?? "";
+            txtPE.Text = p?.ProjectEngineerName ?? "";
+
+            _selectedProjectId = p?.ProjectId;
         }
 
         // =========================
@@ -286,25 +304,30 @@ namespace RentProject
         // =========================
         private RentTime BuildModelFormUI()
         {
+            var startDate = startDateEdit.EditValue as DateTime?;
+            var endDate = endDateEdit.EditValue as DateTime?;
+            var startTime = startTimeEdit.EditValue is DateTime t1 ? t1.TimeOfDay : (TimeSpan?)null;
+            var endTime = endTimeEdit.EditValue is DateTime t2 ? t2.TimeOfDay : (TimeSpan?)null;
+
+            DateTime? actualStartAt = null;
+            DateTime? actualEndAt = null;
+
+            if (startDate != null && startTime != null) 
+                actualStartAt = startDate.Value + startTime.Value;
+
+            if (endDate != null && endTime != null)
+                actualEndAt = endDate.Value + endTime.Value;
+
             return new RentTime
             {
-                CreatedBy = txtCreatedBy.Text.Trim(),
-                Area = txtArea.Text.Trim(),
-                CustomerName = txtCustomerName.Text.Trim(),
-                Sales = txtSales.Text.Trim(),
-                ProjectName = txtProjectName.Text.Trim(),
-                PE = txtPE.Text.Trim(),
-                ProjectNo = cmbProjectNo.Text.Trim(),
-                Location = cmbLocation.Text.Trim(),
+                // 新表真正要存的 FK / 時間
+                ProjectId = _selectedProjectId ?? 0,
+                TestLocationId = _selectedTestLocationId ?? 0,
+                ActualStartAt = actualStartAt,
+                ActualEndAt = actualEndAt,
 
-                ContactName = txtContact.Text.Trim(),
-                Phone = txtPhone.Text.Trim(),
+                // 其他你 Update 會用到的欄位
                 TestInformation = memoTestInformation.Text.Trim(),
-                EngineerName = txtEngineer.Text.Trim(),
-                SampleModel = txtSampleModel.Text.Trim(),
-                SampleNo = txtSampleNo.Text.Trim(),
-                TestMode = txtTestMode.Text.Trim(),
-                TestItem = txtTestItem.Text.Trim(),
                 Notes = memoNote.Text.Trim(),
 
                 HasLunch = chkHasLunch.Checked,
@@ -313,15 +336,37 @@ namespace RentProject
                 HasDinner = chkHasDinner.Checked,
                 DinnerMinutes = chkHasDinner.Checked ? ParseIntOrZero(txtDinnerMinutes.Text) : 0,
 
-                StartDate = startDateEdit.EditValue as DateTime?,
-                EndDate = endDateEdit.EditValue as DateTime?,
-                StartTime = startTimeEdit.EditValue is DateTime t1 ? t1.TimeOfDay : (TimeSpan?)null,
-                EndTime = endTimeEdit.EditValue is DateTime t2 ? t2.TimeOfDay : (TimeSpan?)null,
+                // 下面這些是舊 UI 顯示用（先留著也行）
+                CreatedBy = txtCreatedBy.Text.Trim(),
+                Area = txtArea.Text.Trim(),
+                CustomerName = txtCustomerName.Text.Trim(),
+                Sales = txtSales.Text.Trim(),
+                ProjectName = txtProjectName.Text.Trim(),
+                PE = txtPE.Text.Trim(),
+                ProjectNo = cmbProjectNo.Text.Trim(),
+                Location = cmbLocation.Text.Trim(),
+                ContactName = txtContact.Text.Trim(),
+                Phone = txtPhone.Text.Trim(),
+                EngineerName = txtEngineer.Text.Trim(),
+                SampleModel = txtSampleModel.Text.Trim(),
+                SampleNo = txtSampleNo.Text.Trim(),
+                TestMode = txtTestMode.Text.Trim(),
+                TestItem = txtTestItem.Text.Trim(),
+
+                // StartDate/Time 目前只是 UI 用（你 DB 已改成 ActualStartAt/EndAt）
+                StartDate = startDate,
+                EndDate = endDate,
+                StartTime = startTime,
+                EndTime = endTime
             };
         }
 
         private void FillUIFromModel(RentTime data)
         {
+            // ⭐先記住目前資料的 Id（很重要：避免更新時變 0/null）
+            _selectedProjectId = data.ProjectId;
+            _selectedTestLocationId = data.TestLocationId;
+
             // 文字訊息
             txtBookingNo.Text = data.BookingNo ?? "";
             txtCreatedBy.Text = data.CreatedBy ?? "";
@@ -343,13 +388,28 @@ namespace RentProject
             txtTestItem.Text = data.TestItem ?? "";
             memoNote.Text = data.Notes ?? "";
 
-            //日期
-            startDateEdit.EditValue = data.StartDate;
-            endDateEdit.EditValue = data.EndDate;
+            //時間
+            if (data.ActualStartAt.HasValue)
+            {
+                startDateEdit.EditValue = data.ActualStartAt.Value.Date;
+                startTimeEdit.EditValue = DateTime.Today.Add(data.ActualStartAt.Value.TimeOfDay);
+            }
+            else
+            {
+                startDateEdit.EditValue = null;
+                startTimeEdit.EditValue = null;
+            }
 
-            //時間：TimeEdit 的 EditValue 通常要 DateTime，所以把 TimeSpan 轉成「今天日期 + TimeSpan」
-            startTimeEdit.EditValue = data.StartTime.HasValue ? DateTime.Today.Add(data.StartTime.Value) : null;
-            endTimeEdit.EditValue = data.EndTime.HasValue ? DateTime.Today.Add(data.EndTime.Value) : null;
+            if (data.ActualEndAt.HasValue)
+            {
+                endDateEdit.EditValue = data.ActualEndAt.Value.Date;
+                endTimeEdit.EditValue = DateTime.Today.Add(data.ActualEndAt.Value.TimeOfDay);
+            }
+            else
+            {
+                endDateEdit.EditValue = null;
+                endTimeEdit.EditValue = null;
+            }
 
             // 午餐/晚餐
             chkHasLunch.Checked = data.HasLunch;
@@ -409,7 +469,5 @@ namespace RentProject
             ApplyMealEnableByEndTime();
             UpdateEstimatedUI();
         }
-
-
     }
 }
