@@ -295,23 +295,26 @@ namespace RentProject.Repository
             });
         }
 
-        public int DeletedRentTime(int rentTimeId, string createdBy, DateTime modifiedDate)
+        public int DeletedRentTime(int rentTimeId, int modifiedByUserId)
         {
             using var connection = new SqlConnection(_connectionString);
 
             connection.Open();
 
-            var sql = @"UPDATE dbo.RentTimes
-                        SET IsDeleted = 1,
-                            ModifiedBy = @ModifiedBy,
-                            ModifiedDate = @ModifiedDate
-                        WHERE RentTimeId = @RentTimeId;";
+            var sql = @"
+            UPDATE dbo.RentTime
+            SET 
+                DeletedAt = @Now,
+                ModifiedByUserId = @ModifiedByUserId,
+                ModifiedAt = @Now
+            WHERE RentTimeId = @RentTimeId
+            AND DeletedAt IS NULL;";
 
             return connection.Execute(sql, new 
             { 
                 RentTimeId = rentTimeId ,
-                ModifiedBy = createdBy,
-                ModifiedDate = modifiedDate
+                ModifiedByUserId = modifiedByUserId,
+                Now = DateTime.Now
             });
         }
     }

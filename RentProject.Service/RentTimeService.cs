@@ -58,11 +58,11 @@ namespace RentProject.Service
         }
 
         // 刪除租時單
-        public void DeletedRentTime(int rentTimeId, string createdBy, DateTime modifiedDate)
+        public void DeletedRentTime(int rentTimeId, int modifiedByUserId)
         {
             if (rentTimeId <= 0) throw new Exception("RentTimeId 不正確");
 
-            var rows = _repo.DeletedRentTime(rentTimeId, createdBy,DateTime.Now);
+            var rows = _repo.DeletedRentTime(rentTimeId, modifiedByUserId);
 
             if (rows != 1) throw new Exception($"刪除失敗，受影響筆數={rows}");
         }

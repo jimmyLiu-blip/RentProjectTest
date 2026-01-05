@@ -170,6 +170,8 @@ namespace RentProject
         {
             try
             {
+                int modifiedByUserId = 1; // 先暫時寫死，等你做登入再換掉
+
                 if (_editRentTimeId == null) return;
 
                 var confirm = XtraMessageBox.Show(
@@ -182,9 +184,7 @@ namespace RentProject
                 if (confirm != DialogResult.Yes)
                 { return; }
 
-                var createdBy = txtCreatedBy.Text.Trim();
-
-                _rentTimeService.DeletedRentTime(_editRentTimeId.Value, createdBy, DateTime.Now);
+                _rentTimeService.DeletedRentTime(_editRentTimeId.Value, modifiedByUserId);
 
                 this.DialogResult = System.Windows.Forms.DialogResult.OK; 
                 this.Close(); 
