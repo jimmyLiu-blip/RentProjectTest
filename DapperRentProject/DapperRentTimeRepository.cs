@@ -98,11 +98,13 @@ namespace RentProject.Repository
                 {
                     TempBookingNo = "TMP",
 
-                    ProjectId = 2,
-                    TestLocationId = 2,
-                    AssignedUserId = 2,
-                    TestModeId = 2,
-                    CreatedByUserId = 2,
+                    model.ProjectId,
+                    model.TestLocationId,
+
+                    // 下面先給 0 或 null 都不行的話就先給 1（先讓流程跑通）
+                    model.AssignedUserId,
+                    model.TestModeId,
+                    model.CreatedByUserId,
 
                     model.TestInformation,
                     model.Notes,

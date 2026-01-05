@@ -12,9 +12,9 @@ namespace RentProject.Domain
 
         public int TestLocationId { get; set; }
 
-        public int AssignedUserId { get; set; }
+        public int? AssignedUserId { get; set; }
 
-        public int TestModeId { get; set; }
+        public int? TestModeId { get; set; }
 
         public int CreatedByUserId { get; set; }
 

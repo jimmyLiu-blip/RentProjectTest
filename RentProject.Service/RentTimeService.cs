@@ -8,6 +8,9 @@ namespace RentProject.Service
     {
         private readonly DapperRentTimeRepository _repo;
 
+        private static readonly TimeSpan LunchEnableAt = new(13, 0, 0);
+        private static readonly TimeSpan DinnerEnableAt = new(18, 0, 0);
+
         public RentTimeService(DapperRentTimeRepository repo)
         { 
             _repo = repo;
@@ -67,38 +70,71 @@ namespace RentProject.Service
             if (rows != 1) throw new Exception($"刪除失敗，受影響筆數={rows}");
         }
 
-
         private static void ValidateRequired(RentTime model)
         {   
-            /*
             if (model.ProjectId <= 0) throw new Exception("ProjectId 必填");
             if (model.TestLocationId <= 0) throw new Exception("TestLocationId 必填");
-            if (model.AssignedUserId <= 0) throw new Exception("AssignedUserId 必填");
-            if (model.TestModeId <= 0) throw new Exception("TestModeId 必填");
-            if (model.CreatedByUserId <= 0) throw new Exception("CreatedByUserId 必填");
-            */
 
-            if (!model.HasDinner)
+            if (!model.ActualStartAt.HasValue || !model.ActualEndAt.HasValue)
+            { 
+                model.HasLunch = false;
+                model.LunchMinutes = 0;
+
+                model.HasDinner = false;
+                model.DinnerMinutes = 0;
+
+                return;
+            }
+
+            var start = model.ActualStartAt.Value;
+            var end = model.ActualEndAt.Value;
+
+            if (start > end)
             {
+                throw new Exception("結束時間不可早於開始時間");
+            }
+
+            bool canLunch = end.TimeOfDay >= LunchEnableAt && start.TimeOfDay < LunchEnableAt;
+            bool canDinner = end.TimeOfDay >= DinnerEnableAt && start.TimeOfDay < DinnerEnableAt;
+
+            if (!canLunch)
+            {
+                model.HasLunch = false;
+                model.LunchMinutes = 0;
+            }
+            else
+            {
+                if (model.HasLunch) model.LunchMinutes = 60;
+                else model.LunchMinutes = 0;
+            }
+
+            if (!canDinner)
+            {
+                model.HasDinner = false;
                 model.DinnerMinutes = 0;
             }
             else
-            { 
-                if (model.DinnerMinutes <= 0) throw new Exception("HasDinner 勾選時，DinnerMinutes 必填且需 > 0");
+            {
+                if (!model.HasDinner) model.DinnerMinutes = 0;
+                else
+                {
+                    if (model.DinnerMinutes <= 0)
+                        throw new Exception("HasDinner 勾選時，DinnerMinutes 必填且須 > 0");
+                } 
             }
         }
 
         private static void CalculateEstimated(RentTime model)
         {
-            if (model.StartDate is null || model.EndDate is null || model.StartTime is null || model.EndTime is null)
+            if (!model.ActualStartAt.HasValue || !model.ActualEndAt.HasValue)
             { 
                 model.EstimatedMinutes = 0;
                 model.EstimatedHours = 0;
                 return; //結束這個方法，不要在往下算
             }
 
-            var start = model.StartDate.Value.Date + model.StartTime.Value;
-            var end = model.EndDate.Value.Date + model.EndTime.Value;
+            var start = model.ActualStartAt.Value;
+            var end = model.ActualEndAt.Value;
 
             if (end < start) throw new Exception("結束時間不可早於開始時間");
 
@@ -112,7 +148,5 @@ namespace RentProject.Service
             model.EstimatedMinutes = minutes;
             model.EstimatedHours = Math.Round(minutes/60m, 2);
         }
-
-
     }
 }

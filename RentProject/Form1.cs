@@ -53,7 +53,6 @@ namespace RentProject
             ShowCalendarView();
         }
 
-
         private void btnAddRentTime_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             var form = new Project(_rentTimeservice, _projectService, _testLocationService);
