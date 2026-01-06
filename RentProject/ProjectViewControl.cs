@@ -20,13 +20,14 @@ namespace RentProject
         private readonly RentTimeService _rentTimeService;
         private readonly ProjectService _projectService;
         private readonly TestLocationService _testLocationService;
+        private readonly Func<int, Project> _projectFactory;
 
         public ProjectViewControl()  //無參數建構子，讓Designer可以正常建立這個UserControl
         {
             InitializeComponent();
         }
 
-        public ProjectViewControl(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService):this() //有參數建構子，注入Service，this()的意思是先跑初始化設定，把畫面元件都建立好後，才把下面那兩行Service填進去
+        public ProjectViewControl(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService, Func<int, Project> projectFactory) :this() //有參數建構子，注入Service，this()的意思是先跑初始化設定，把畫面元件都建立好後，才把下面那兩行Service填進去
         {
             _rentTimeService = rentTimeService 
                 ?? throw new ArgumentNullException(nameof(rentTimeService));
@@ -36,6 +37,9 @@ namespace RentProject
 
             _testLocationService = testLocationService
                 ?? throw new ArgumentNullException(nameof(testLocationService));
+
+            _projectFactory = projectFactory
+                ?? throw new ArgumentNullException(nameof(projectFactory));
         }
 
         public void LoadData(List<RentTimeListRow> list)
@@ -133,7 +137,7 @@ namespace RentProject
             var row = gridView1.GetRow(gridView1.FocusedRowHandle) as RentTimeListRow; // FocusedRowHandle：目前選到的那一列
             if (row == null) return;                                // GetRow(handle)：把那一列的資料物件取出來（就是 RentTime）
 
-            var form = new Project(_rentTimeService, _projectService, _testLocationService, row.RentTimeId);
+            var form = _projectFactory(row.RentTimeId);
 
             var dr = form.ShowDialog();
 

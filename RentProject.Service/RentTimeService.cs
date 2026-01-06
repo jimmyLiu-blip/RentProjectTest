@@ -16,6 +16,12 @@ namespace RentProject.Service
             _repo = repo;
         }
 
+        // 連線測試
+        public string TestConnection()
+        { 
+            return _repo.TestConnection();
+        }
+
         // 新增租時單
         public CreateRentTimeResult CreateRentTime(RentTime model)
         {

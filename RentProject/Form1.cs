@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
+using Microsoft.Extensions.DependencyInjection;
 using RentProject.Repository;
 using RentProject.Service;
+using System;
 using System.Configuration;
 using System.Windows.Forms;
 
@@ -9,11 +11,8 @@ namespace RentProject
 {
     public partial class Form1 : RibbonForm
     {
-        private readonly DapperRentTimeRepository _rentTimeRepo;
         private readonly RentTimeService _rentTimeservice;
-        private readonly DapperProjectRepository _projectRepo;
         private readonly ProjectService _projectService;
-        private readonly DapperTestLocationRepository _testLocationRepo;
         private readonly TestLocationService _testLocationService;
 
         private ProjectViewControl _projectView;
@@ -22,23 +21,22 @@ namespace RentProject
         // true = 目前顯示 CalendarView；false = 目前顯示 ProjectView
         private bool _isCalendarView = true;
 
-        public Form1()
+        // 在 Form1 建構子加進來 DI 容器（IServiceProvider）
+        // IServiceProvider 是什麼? 它就是 DI容器本身的取貨櫃台
+        private readonly IServiceProvider _sp;
+        private readonly Func<int, Project> _projectFactory;
+
+        public Form1(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService, IServiceProvider sp, Func<int,Project> projectFactory)
         {
             InitializeComponent();
 
-            var connectionString =
-                ConfigurationManager
-                .ConnectionStrings["DefaultConnection"]
-                .ConnectionString;
+            _rentTimeservice = rentTimeService;
+            _projectService = projectService;
+            _testLocationService = testLocationService;
+            _sp = sp;
+            _projectFactory = projectFactory;
 
-            _rentTimeRepo = new DapperRentTimeRepository(connectionString);
-            _rentTimeservice = new RentTimeService(_rentTimeRepo);
-            _projectRepo = new DapperProjectRepository(connectionString);
-            _projectService = new ProjectService(_projectRepo);
-            _testLocationRepo = new DapperTestLocationRepository(connectionString);
-            _testLocationService = new TestLocationService(_testLocationRepo);
-
-            _projectView = new ProjectViewControl(_rentTimeservice, _projectService, _testLocationService) { Dock = DockStyle.Fill };
+            _projectView = new ProjectViewControl(_rentTimeservice, _projectService, _testLocationService, _projectFactory) { Dock = DockStyle.Fill };
 
             _projectView.RentTimeSaved += RefreshProjectView; //ProjectViewControl 說「存好了」→ Form1 刷新列表
 
@@ -53,24 +51,37 @@ namespace RentProject
             ShowCalendarView();
         }
 
+        // 點擊新增租時單綁定按鈕事件
         private void btnAddRentTime_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            var form = new Project(_rentTimeservice, _projectService, _testLocationService);
+            var form = _sp.GetRequiredService<Project>();
 
             var dr = form.ShowDialog();
 
-            if (dr == System.Windows.Forms.DialogResult.OK)
+            if (dr == DialogResult.OK)
             {
                 RefreshProjectView();
                 ShowProjectView();
             }
         }
 
+        // 點擊測試連線綁定按鈕事件
         private void btnTestConnection_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            string msg = _rentTimeRepo.TestConnection();
+            string msg = _rentTimeservice.TestConnection();
 
             XtraMessageBox.Show(msg, "TestConnection");
+        }
+
+        // 點擊 View 切換視圖
+        private void btnView_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (_isCalendarView)
+            {
+                ShowProjectView();
+            }
+            else
+                ShowCalendarView();
         }
 
         private void ShowProjectView()
@@ -88,16 +99,6 @@ namespace RentProject
             _isCalendarView = true;
 
             btnView.Caption = "切換到案件";
-        }
-
-        private void btnView_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (_isCalendarView)
-            {
-                ShowProjectView();
-            }
-            else
-                ShowCalendarView();
         }
 
         private void RefreshProjectView()

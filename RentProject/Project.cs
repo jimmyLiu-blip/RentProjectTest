@@ -2,7 +2,6 @@
 using RentProject.Domain;
 using RentProject.Service;
 using RentProject.Shared.DTO;
-using RentProject.UIModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,32 +30,6 @@ namespace RentProject
 
         // 編輯租時單
         private readonly int? _editRentTimeId = null; // 要用 .Value 把「nullable 裡面的那個 int 值」拿出來。
-
-        private readonly List<LocationItem> _locations = new()
-        {
-            new LocationItem { Location = "Conducted 1", Area = "WG" },
-            new LocationItem { Location = "Conducted 2", Area = "WG" },
-            new LocationItem { Location = "Conducted 3", Area = "WG" },
-            new LocationItem { Location = "Conducted 4", Area = "WG" },
-            new LocationItem { Location = "Conducted 5", Area = "WG" },
-            new LocationItem { Location = "Conducted 6", Area = "WG" },
-            new LocationItem { Location = "SAC 1", Area = "WG" },
-            new LocationItem { Location = "SAC 2", Area = "WG" },
-            new LocationItem { Location = "SAC 3", Area = "WG" },
-            new LocationItem { Location = "FAC 1", Area = "WG" },
-            new LocationItem { Location = "Setup Room 1", Area = "WG" },
-            new LocationItem { Location = "Conducted A", Area = "HY" },
-            new LocationItem { Location = "Conducted B", Area = "HY" },
-            new LocationItem { Location = "Conducted C", Area = "HY" },
-            new LocationItem { Location = "Conducted D", Area = "HY" },
-            new LocationItem { Location = "Conducted E", Area = "HY" },
-            new LocationItem { Location = "Conducted F", Area = "HY" },
-            new LocationItem { Location = "SAC C", Area = "HY" },
-            new LocationItem { Location = "SAC D", Area = "HY" },
-            new LocationItem { Location = "SAC G", Area = "HY" },
-            new LocationItem { Location = "FAC A", Area = "HY" },
-            new LocationItem { Location = "Setup Room A", Area = "HY" },
-        };
 
         // =========================
         // 2) 建構子

@@ -80,6 +80,7 @@
             chkHasLunch = new DevExpress.XtraEditors.CheckEdit();
             chkHasDinner = new DevExpress.XtraEditors.CheckEdit();
             btnDeletedRentTime = new DevExpress.XtraEditors.SimpleButton();
+            label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)cmbProjectNo.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cmbLocation.Properties).BeginInit();
             ((System.ComponentModel.ISupportInitialize)startDateEdit.Properties).BeginInit();
@@ -221,15 +222,15 @@
             labelControl16.Name = "labelControl16";
             labelControl16.Size = new System.Drawing.Size(72, 22);
             labelControl16.TabIndex = 16;
-            labelControl16.Text = "樣品型號";
+            labelControl16.Text = "產品型號";
             // 
             // labelControl17
             // 
             labelControl17.Location = new System.Drawing.Point(44, 783);
             labelControl17.Name = "labelControl17";
-            labelControl17.Size = new System.Drawing.Size(72, 22);
+            labelControl17.Size = new System.Drawing.Size(90, 22);
             labelControl17.TabIndex = 17;
-            labelControl17.Text = "測試模式";
+            labelControl17.Text = "測試模式：";
             // 
             // labelControl18
             // 
@@ -261,7 +262,7 @@
             labelControl21.Name = "labelControl21";
             labelControl21.Size = new System.Drawing.Size(72, 22);
             labelControl21.TabIndex = 21;
-            labelControl21.Text = "樣品序號";
+            labelControl21.Text = "產品序號";
             // 
             // labelControl22
             // 
@@ -539,12 +540,22 @@
             btnDeletedRentTime.Text = "刪除租時";
             btnDeletedRentTime.Click += btnDeletedRentTime_Click;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(572, 618);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(28, 22);
+            label1.TabIndex = 57;
+            label1.Text = "時";
+            // 
             // Project
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             AutoSize = true;
             ClientSize = new System.Drawing.Size(830, 1091);
+            Controls.Add(label1);
             Controls.Add(btnDeletedRentTime);
             Controls.Add(chkHasDinner);
             Controls.Add(chkHasLunch);
@@ -690,5 +701,6 @@
         private DevExpress.XtraEditors.CheckEdit chkHasLunch;
         private DevExpress.XtraEditors.CheckEdit chkHasDinner;
         private DevExpress.XtraEditors.SimpleButton btnDeletedRentTime;
+        private System.Windows.Forms.Label label1;
     }
 }
