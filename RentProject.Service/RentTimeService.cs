@@ -4,14 +4,14 @@ using RentProject.Shared.DTO;
 
 namespace RentProject.Service
 {
-    public class RentTimeService
+    public class RentTimeService : IRentTimeService
     {
-        private readonly DapperRentTimeRepository _repo;
+        private readonly IRentTimeRepository _repo;
 
         private static readonly TimeSpan LunchEnableAt = new(13, 0, 0);
         private static readonly TimeSpan DinnerEnableAt = new(18, 0, 0);
 
-        public RentTimeService(DapperRentTimeRepository repo)
+        public RentTimeService(IRentTimeRepository repo)
         { 
             _repo = repo;
         }

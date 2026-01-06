@@ -26,17 +26,18 @@ namespace RentProject
             var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             // 2. 註冊 connectionString(讓repo使用)，Singleton = 整個程式生命週期只會建立一次，同一個物件一直重用。
+            // 建議之後要修改
             services.AddSingleton<string>(connectionString);
 
             // 3. 註冊 repository
-            services.AddSingleton<DapperRentTimeRepository>(sp => new DapperRentTimeRepository(connectionString));
-            services.AddSingleton<DapperProjectRepository>(sp => new DapperProjectRepository(connectionString));
-            services.AddSingleton<DapperTestLocationRepository>(sp => new DapperTestLocationRepository(connectionString));
+            services.AddSingleton<IRentTimeRepository>(sp => new DapperRentTimeRepository(sp.GetRequiredService<string>()));
+            services.AddSingleton<IProjectRepository>(sp => new DapperProjectRepository(sp.GetRequiredService<string>()));
+            services.AddSingleton<ITestLocationRepository>(sp => new DapperTestLocationRepository(sp.GetRequiredService<string>()));
 
             // 4. 註冊 services
-            services.AddSingleton<RentTimeService>();
-            services.AddSingleton<ProjectService>();
-            services.AddSingleton<TestLocationService>();
+            services.AddSingleton<IRentTimeService, RentTimeService>();
+            services.AddSingleton<IProjectService, ProjectService>();
+            services.AddSingleton<ITestLocationService, TestLocationService>();
 
             // 5. 註冊 Forms / UserControls
             services.AddTransient<Form1>(); // Form通常使用Transient，Transient = 每次跟容器要一次，就 new 一次新的。

@@ -3,11 +3,11 @@ using RentProject.Shared.DTO;
 
 namespace RentProject.Service
 {
-    public class ProjectService
+    public class ProjectService : IProjectService
     {
-        private readonly DapperProjectRepository _projectRepo;
+        private readonly IProjectRepository _projectRepo;
 
-        public ProjectService(DapperProjectRepository projectRepo)
+        public ProjectService(IProjectRepository projectRepo)
         {
             _projectRepo = projectRepo;
         }

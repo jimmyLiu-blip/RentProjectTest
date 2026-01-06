@@ -5,7 +5,7 @@ using RentProject.UIModels;
 
 namespace RentProject.Repository
 {
-    public class DapperProjectRepository
+    public class DapperProjectRepository:IProjectRepository
     {
         private readonly string _connectionString;
 

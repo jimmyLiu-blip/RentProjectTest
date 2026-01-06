@@ -15,9 +15,9 @@ namespace RentProject
         // =========================
         // 1) 欄位 / 常數 / 資料來源
         // =========================
-        private readonly RentTimeService _rentTimeService;
-        private readonly ProjectService _projectService;
-        private readonly TestLocationService _testLocationService;
+        private readonly IRentTimeService _rentTimeService;
+        private readonly IProjectService _projectService;
+        private readonly ITestLocationService _testLocationService;
 
         private List<ProjectLookupRow> _projects = new();
         private List<TestLocationLookupRow> _testLocations = new();
@@ -34,7 +34,7 @@ namespace RentProject
         // =========================
         // 2) 建構子
         // =========================
-        public Project(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService)
+        public Project(IRentTimeService rentTimeService, IProjectService projectService, ITestLocationService testLocationService)
         {
             InitializeComponent();
             _rentTimeService = rentTimeService;
@@ -42,7 +42,7 @@ namespace RentProject
             _testLocationService = testLocationService;
         }
 
-        public Project(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService, int rentTimeId) : this(rentTimeService, projectService, testLocationService)
+        public Project(IRentTimeService rentTimeService, IProjectService projectService, ITestLocationService testLocationService, int rentTimeId) : this(rentTimeService, projectService, testLocationService)
         {
             _editRentTimeId = rentTimeId;
         }

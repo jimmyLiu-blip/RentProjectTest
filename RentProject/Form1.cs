@@ -1,19 +1,17 @@
 ﻿using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
 using Microsoft.Extensions.DependencyInjection;
-using RentProject.Repository;
 using RentProject.Service;
 using System;
-using System.Configuration;
 using System.Windows.Forms;
 
 namespace RentProject
 {
     public partial class Form1 : RibbonForm
     {
-        private readonly RentTimeService _rentTimeservice;
-        private readonly ProjectService _projectService;
-        private readonly TestLocationService _testLocationService;
+        private readonly IRentTimeService _rentTimeservice;
+        private readonly IProjectService _projectService;
+        private readonly ITestLocationService _testLocationService;
 
         private ProjectViewControl _projectView;
         private CalendarViewControl _calendarView;
@@ -26,7 +24,7 @@ namespace RentProject
         private readonly IServiceProvider _sp;
         private readonly Func<int, Project> _projectFactory;
 
-        public Form1(RentTimeService rentTimeService, ProjectService projectService, TestLocationService testLocationService, IServiceProvider sp, Func<int,Project> projectFactory)
+        public Form1(IRentTimeService rentTimeService, IProjectService projectService, ITestLocationService testLocationService, IServiceProvider sp, Func<int,Project> projectFactory)
         {
             InitializeComponent();
 

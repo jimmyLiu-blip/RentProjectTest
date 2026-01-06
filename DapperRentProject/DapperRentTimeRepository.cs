@@ -6,7 +6,7 @@ using RentProject.Shared.DTO;
 
 namespace RentProject.Repository
 {
-    public class DapperRentTimeRepository
+    public class DapperRentTimeRepository : IRentTimeRepository
     {
         private readonly string _connectionString;
 

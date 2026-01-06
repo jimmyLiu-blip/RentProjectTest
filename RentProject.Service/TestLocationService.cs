@@ -3,11 +3,11 @@ using RentProject.Shared.DTO;
 
 namespace RentProject.Service
 {
-    public class TestLocationService
+    public class TestLocationService : ITestLocationService
     {
-        private readonly DapperTestLocationRepository _testLocationRepository;
+        private readonly ITestLocationRepository _testLocationRepository;
 
-        public TestLocationService(DapperTestLocationRepository testLocationRepository)
+        public TestLocationService(ITestLocationRepository testLocationRepository)
         {
             _testLocationRepository = testLocationRepository;
         }

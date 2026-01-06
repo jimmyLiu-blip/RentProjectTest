@@ -4,7 +4,7 @@ using RentProject.Shared.DTO;
 
 namespace RentProject.Repository
 {
-    public class DapperTestLocationRepository
+    public class DapperTestLocationRepository : ITestLocationRepository
     {
         private readonly string _connectionString;
 
